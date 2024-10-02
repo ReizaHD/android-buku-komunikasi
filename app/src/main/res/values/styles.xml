@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="editTextStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:textCursorDrawable">@drawable/cursor_color</item>
+        <item name="android:backgroundTint">@color/black</item>
+    </style>
+    <style name="buttonStyle" parent="Widget.Material3.Button">
+        <item name="android:backgroundTint">#FFC200</item>
+        <item name="android:fontFamily">@font/inter_bold</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="textOnlyButtonStyle" parent="buttonStyle">
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:fontFamily">@font/inter</item>
+        <item name="android:enabled">false</item>
+    </style>
+    <style name="darkDialogStyle" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:colorBackground">#FFFFFF</item>
+        <item name="android:textColorPrimary">@color/black</item>
+    </style>
+
+    <style name="listViewStyle" parent="Widget.AppCompat.ListView">
+        <item name="android:dividerHeight">20dp</item>
+    </style>
+</resources>

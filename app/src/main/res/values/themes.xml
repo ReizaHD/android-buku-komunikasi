@@ -1,0 +1,20 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.BukuKomunikasi" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:textColor">@color/black</item>
+
+    </style>
+    <style name="Theme.BukuKomunikasi" parent="Base.Theme.BukuKomunikasi">
+        <item name="cursorColor">@color/black</item>
+        <item name="editTextStyle">@style/editTextStyle</item>
+        <item name="materialButtonStyle">@style/buttonStyle</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:statusBarColor">#33000000</item>
+        <item name="android:navigationBarColor">#33000000</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:listViewStyle">@style/listViewStyle</item>
+    </style>>
+</resources>
