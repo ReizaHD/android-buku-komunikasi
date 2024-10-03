@@ -2,8 +2,6 @@ package com.example.bk.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,12 +56,12 @@ public class MessageAdapter extends BaseAdapter {
 
         if(pemberitahuan.isSudahDibaca()){
             avatarLayout.setBackgroundColor(Color.parseColor("#C3C3C3"));
-            roundBg.setBackground(ctx.getDrawable(R.drawable.round_bg_gray));
+            roundBg.setBackground(ctx.getDrawable(R.drawable.card_round_bg_gray));
             infoBtn.setBackgroundColor(Color.parseColor("#C3C3C3"));
         }
 
         namaSiswa.setText(pemberitahuan.getMurid());
-        tgl.setText(pemberitahuan.getTanggal());
+        tgl.setText(pemberitahuan.getTanggalText());
         pesanTxt.setText(pemberitahuan.getIsiPesan());
         return view;
     }

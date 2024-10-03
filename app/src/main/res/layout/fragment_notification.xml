@@ -6,7 +6,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.NotificationFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="128dp"
@@ -20,7 +19,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_card"
+            android:background="@drawable/search_bar_bg"
             android:layout_marginHorizontal="20dp">
             <ImageView
                 android:id="@+id/ic_search"
@@ -39,7 +38,7 @@
                 android:inputType="none"
                 android:layout_alignTop="@id/ic_search"
                 android:layout_alignBottom="@id/ic_search"
-                android:layout_toRightOf="@id/ic_search"
+                android:layout_toEndOf="@id/ic_search"
                 android:textColor="@color/black"
                 android:textColorHint="#707070"
                 android:padding="5dp"
@@ -49,7 +48,7 @@
             android:id="@+id/list_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="25dp"
             android:requiresFadingEdge="vertical"
             android:fadingEdgeLength="50dp"/>
     </LinearLayout>

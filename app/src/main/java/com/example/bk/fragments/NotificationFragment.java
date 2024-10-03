@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,7 @@ public class NotificationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        Log.d("New Fragment","True");
         return inflater.inflate(R.layout.fragment_notification, container, false);
     }
 
@@ -65,13 +67,14 @@ public class NotificationFragment extends Fragment {
         listPemberitahuan.add(new Pemberitahuan("Adi","Kegiatan siswa pada hari kamis " +
                 "adalah melakukan kunjungan ke salah satu masjid unik yang terletak di " +
                 "kabupaten semarang. para siswa didampingi bapak ibu guru berangkat menggunakan " +
-                "Bus dari SD Islam Bintang Juara pukul 08.00 pagi .....","Kamis, 16 Mei 2024","Budi",false));
+                "Bus dari SD Islam Bintang Juara pukul 08.00 pagi .....","16-05-2024","Budi",false));
         listPemberitahuan.add(new Pemberitahuan("Adi","Ayah Bunda, Besok Jumat 17 Mei 2024 diharapkan kakak" +
                 " kakak salih dan salihah membawa buku tulis dan tumbler untuk kegiatan outing class di" +
                 " sekitar sekolah. Ayah Bunda bisa menjemput Kakak Salih dan Salihah pada jam 17.00 setelah" +
-                " kegiatan","Kamis, 16 Mei 2024","Alan", false));
-        listPemberitahuan.add(new Pemberitahuan("Adi","Pemberitahuan hari selasa","21-09-2024","Budi", false));
-        listPemberitahuan.add(new Pemberitahuan("Adi","Pemberitahuan hari selasa","21-09-2024","Budi", true));
+                " kegiatan","16-05-2024","Alan", false));
+        listPemberitahuan.add(new Pemberitahuan("Adi","Pemberitahuan hari Jumat","17-05-2024","Budi", false));
+        listPemberitahuan.add(new Pemberitahuan("Adi","Pemberitahuan hari Senin","20-05-2024","Budi", false));
+        listPemberitahuan.add(new Pemberitahuan("Adi","Pemberitahuan hari Selasa","21-05-2024","Budi", true));
 
         MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
         builder.setTitleText("Select date")

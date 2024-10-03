@@ -10,6 +10,8 @@ import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,39 +34,12 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    ArrayList<Pemberitahuan> listPemberitahuan;
-    MessageAdapter adapter;
-    ListView listView;
-    int resumeCode;
     SharedPreferences sharedPreferences;
     UserData userData;
     Bundle bundle;
-
-//    @Override
-//    protected void onSaveInstanceState(@NonNull Bundle outState) {
-//        Log.d("time","now");
-//        outState.putSerializable("userData", userData);
-//        super.onSaveInstanceState(outState);
-//    }
-//
-//    @Override
-//    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-//        super.onRestoreInstanceState(savedInstanceState);
-//        Log.d("time","now");
-//        userData = (UserData) savedInstanceState.getSerializable("userData");
-//    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d("result","Balik");
-//        HomeFragment homeFragment = new HomeFragment();
-//        homeFragment.setArguments(bundle);
-//        getSupportFragmentManager()
-//                .beginTransaction()
-//                .replace(R.id.fragment_container, homeFragment).commit();
-    }
+    int selectedNavItem;
+    Fragment homeFragment, notificationFragment, profileFragment;
+    private ActivityResultLauncher<Intent> activityResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +51,14 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
             return insets;
         });
+
+        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result ->{
+            if(result.getResultCode() == Activity.RESULT_OK){
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                finish();
+            }
+        });
+
 
         Intent intent = getIntent();
         Log.d("State","before");
@@ -97,7 +80,8 @@ public class MainActivity extends AppCompatActivity {
         bundle = new Bundle();
         bundle.putSerializable("userData", userData);
 
-        HomeFragment homeFragment = new HomeFragment();
+        selectedNavItem = R.id.nav_home;
+        homeFragment = new HomeFragment();
         homeFragment.setArguments(bundle);
 
         getSupportFragmentManager()
@@ -106,9 +90,11 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
 
         getSupportFragmentManager().setFragmentResultListener("goToEdit", this, (requestKey, result) -> {
-
             Log.d("Fragment","data");
-            startActivityForResult(new Intent(MainActivity.this, EditPasswordActivity.class), 0);
+            Intent passwordIntent = new Intent(MainActivity.this, EditPasswordActivity.class);
+            passwordIntent.putExtra("username",userData.getName());
+            passwordIntent.putExtra("id",userData.getId());
+            activityResultLauncher.launch(passwordIntent);
         });
 
 
@@ -118,31 +104,54 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
             int itemId = item.getItemId();
+            Log.d("item id", itemId + " " + selectedNavItem);
+
             if (itemId == R.id.nav_home) {
-                selectedFragment = new HomeFragment();
-                selectedFragment.setArguments(bundle);
+                if (selectedNavItem == R.id.nav_home) {
+                    // Pressed twice, refresh the fragment
+                    selectedFragment = new HomeFragment();
+                } else {
+                    // Use existing fragment if available
+                    if (homeFragment == null) {
+                        homeFragment = new HomeFragment();
+                        homeFragment.setArguments(bundle);
+                    }
+                    selectedFragment = homeFragment;
+                }
             } else if (itemId == R.id.nav_notification) {
-                selectedFragment = new NotificationFragment();
+                if (selectedNavItem == R.id.nav_notification) {
+                    // Pressed twice, refresh the fragment
+                    selectedFragment = new NotificationFragment();
+                } else {
+                    if (notificationFragment == null) {
+                        notificationFragment = new NotificationFragment();
+                        notificationFragment.setArguments(bundle);
+                    }
+                    selectedFragment = notificationFragment;
+                }
             } else if (itemId == R.id.nav_profile) {
-                selectedFragment = new ProfileFragment();
+                if (selectedNavItem == R.id.nav_profile) {
+                    // Pressed twice, refresh the fragment
+                    selectedFragment = new ProfileFragment();
+                } else {
+                    if (profileFragment == null) {
+                        profileFragment = new ProfileFragment();
+                        profileFragment.setArguments(bundle);
+                    }
+                    selectedFragment = profileFragment;
+                }
             }
-            if (selectedFragment != null)
+
+            selectedNavItem = itemId;
+
+            // Replace the fragment
+            if (selectedFragment != null) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+            }
+
             return true;
         });
-    }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 0){
-            if(resultCode== Activity.RESULT_OK){
-                Fragment selectedFragment = new HomeFragment();
-                selectedFragment.setArguments(bundle);
-//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
-            }
-        }
     }
-
 
 }

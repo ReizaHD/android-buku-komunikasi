@@ -172,6 +172,8 @@ public class LoginActivity extends AppCompatActivity {
                 loginBtn.setVisibility(View.VISIBLE);
                 builder.setMessage("Email atau password salah").setTitle("Gagal Login");
                 builder.show();
+                email.setEnabled(true);
+                password.setEnabled(true);
             }
         }) {
             @Override
