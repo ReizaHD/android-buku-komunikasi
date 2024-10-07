@@ -32,6 +32,7 @@ android {
 }
 
 dependencies {
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation(libs.volley)
     implementation(libs.glide)

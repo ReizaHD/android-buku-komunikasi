@@ -44,13 +44,19 @@
                 android:padding="5dp"
                 />
         </RelativeLayout>
-        <ListView
-            android:id="@+id/list_item"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/refresh"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:requiresFadingEdge="vertical"
-            android:fadingEdgeLength="50dp"/>
+            android:layout_marginTop="25dp">
+            <ListView
+                android:id="@+id/list_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:requiresFadingEdge="vertical"
+                android:fadingEdgeLength="50dp"/>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
     </LinearLayout>
 
 </FrameLayout>

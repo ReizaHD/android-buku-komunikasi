@@ -25,4 +25,7 @@
     <style name="listViewStyle" parent="Widget.AppCompat.ListView">
         <item name="android:dividerHeight">20dp</item>
     </style>
+    <style name="navBarStyle" parent="Widget.Material3.BottomNavigationView">
+        <item name="itemPaddingTop">20dp</item>
+    </style>
 </resources>

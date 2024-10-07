@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,6 +37,7 @@ public class NotificationFragment extends Fragment {
     ListView list;
     ProgressBar pb;
     EditText searchBar;
+    SwipeRefreshLayout refreshLayout;
 
 
     public NotificationFragment() {
@@ -62,6 +64,7 @@ public class NotificationFragment extends Fragment {
         list = view.findViewById(R.id.list_item);
         pb = view.findViewById(R.id.progress_bar);
         searchBar = view.findViewById(R.id.search_bar);
+        refreshLayout = view.findViewById(R.id.refresh);
 
         ArrayList<Pemberitahuan> listPemberitahuan = new ArrayList<>();
         listPemberitahuan.add(new Pemberitahuan("Adi","Kegiatan siswa pada hari kamis " +
@@ -80,6 +83,13 @@ public class NotificationFragment extends Fragment {
         builder.setTitleText("Select date")
                 .setSelection(MaterialDatePicker.todayInUtcMilliseconds());
         MaterialDatePicker<Long> datePicker = builder.build();
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+            }
+        });
 
         searchBar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,5 +114,8 @@ public class NotificationFragment extends Fragment {
         list.setVisibility(View.VISIBLE);
     }
 
+    private void refresh(){
+
+    }
 
 }

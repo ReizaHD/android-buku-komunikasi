@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -24,6 +26,7 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -62,6 +65,14 @@ public class LoginActivity extends AppCompatActivity {
             return insets;
         });
 
+        builder = new AlertDialog.Builder(LoginActivity.this,R.style.darkDialogStyle);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
         try {
             String versionName = getPackageManager()
                     .getPackageInfo(getPackageName(), 0).versionName;
@@ -78,13 +89,6 @@ public class LoginActivity extends AppCompatActivity {
         showPass = findViewById(R.id.ic_show_password);
         sharedPreferences = getSharedPreferences("login_session", MODE_PRIVATE);
         pb = findViewById(R.id.login_pb);
-        builder = new AlertDialog.Builder(LoginActivity.this,R.style.darkDialogStyle);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
 
         if(sharedPreferences.getBoolean("isLoggedIn", false)){
             emailTxt = sharedPreferences.getString("email", "");
@@ -119,9 +123,12 @@ public class LoginActivity extends AppCompatActivity {
                     Log.d("Username", emailTxt + " " + passTxt);
                     hideKeyboard(view);
                     authLogin();
-                } else {
+                } else if (emailTxt.isBlank() || passTxt.isBlank()){
                     builder.setMessage("Email dan password harap diisi")
                             .setTitle("Gagal Login");
+                    builder.show();
+                } else if(!NetworkUtil.isConnectedToInternet(getApplicationContext())){
+                    builder.setMessage("Tidak dapat terhubung ke internet");
                     builder.show();
                 }
 
@@ -167,11 +174,17 @@ public class LoginActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                if (error instanceof NoConnectionError) {
+                    // Handle no internet connection case
+                    builder.setMessage("Tidak dapat terhubung ke internet");
+                    builder.show();
+                }else{
+                    builder.setMessage("Email atau password salah").setTitle("Gagal Login");
+                    builder.show();
+                }
                 Log.e("Error", error.toString());
                 pb.setVisibility(View.GONE);
                 loginBtn.setVisibility(View.VISIBLE);
-                builder.setMessage("Email atau password salah").setTitle("Gagal Login");
-                builder.show();
                 email.setEnabled(true);
                 password.setEnabled(true);
             }
@@ -200,6 +213,17 @@ public class LoginActivity extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    public static class NetworkUtil {
+        public static boolean isConnectedToInternet(Context context) {
+            ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (connectivityManager != null) {
+                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+                return networkInfo != null && networkInfo.isConnected();
+            }
+            return false;
         }
     }
 }

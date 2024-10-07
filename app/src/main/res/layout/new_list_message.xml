@@ -78,11 +78,11 @@
                 android:enabled="false"
                 android:id="@+id/info_button"
                 android:layout_width="wrap_content"
-                android:layout_height="20dp"
+                android:layout_height="25dp"
                 style="@style/textOnlyButtonStyle"
                 android:backgroundTint="#FFC107"
                 android:text="Informasi Umum"
-                android:textSize="8sp"
+                android:textSize="10sp"
                 android:layout_alignParentEnd="true"/>
         </RelativeLayout>
     </LinearLayout>

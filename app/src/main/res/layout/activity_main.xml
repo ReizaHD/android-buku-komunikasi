@@ -22,6 +22,7 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
+        style="@style/navBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -29,7 +30,7 @@
         app:itemTextAppearanceActive="@font/inter"
         app:itemTextAppearanceInactive="@font/inter"
         app:itemIconTint="@color/nav_icon_color"
-        app:itemIconSize="30dp"
+        app:itemIconSize="25dp"
         app:backgroundTint="#FFFFFF"
         app:itemBackground="@android:color/transparent"
         app:itemActiveIndicatorStyle="@android:color/transparent"
