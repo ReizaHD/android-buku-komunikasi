@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "395473760206",
+    "project_id": "bukukomunikasi-b5b31",
+    "storage_bucket": "bukukomunikasi-b5b31.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:395473760206:android:c14ebdec630ac73453459f",
+        "android_client_info": {
+          "package_name": "com.bintangjuara.bk"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7fgZiPSUtzJhTIEoM_4Xy8tw6tWZuXDM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

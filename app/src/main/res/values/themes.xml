@@ -16,5 +16,6 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:listViewStyle">@style/listViewStyle</item>
+        <item name="materialSwitchStyle">@style/switchStyle</item>
     </style>>
 </resources>

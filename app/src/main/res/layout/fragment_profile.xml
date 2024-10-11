@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.ProfileFragment">
 
     <LinearLayout
@@ -58,14 +59,24 @@
                 android:layout_height="wrap_content"
                 android:text="+8801712663389"
                 android:fontFamily="@font/inter"/>
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/notification_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:checked="true"
+                android:text="Nyalakan Notifikasi"
+                android:fontFamily="@font/inter"/>
         </LinearLayout>
+
         <Button
             android:id="@+id/edit_password_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
             android:text="UBAH PASSWORD"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="50dp"
             />
         <Button
             android:id="@+id/logout_btn"

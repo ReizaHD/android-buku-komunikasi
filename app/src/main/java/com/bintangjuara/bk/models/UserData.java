@@ -1,4 +1,4 @@
-package com.example.bk.models;
+package com.bintangjuara.bk.models;
 
 import org.json.JSONException;
 import org.json.JSONObject;

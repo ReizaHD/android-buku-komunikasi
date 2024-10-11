@@ -1,4 +1,4 @@
-package com.example.bk.activities;
+package com.bintangjuara.bk.activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -33,8 +33,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.bk.R;
-import com.example.bk.models.UserData;
+import com.bintangjuara.bk.R;
+import com.bintangjuara.bk.models.UserData;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -119,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
                 emailTxt = String.valueOf(email.getText());
                 passTxt = String.valueOf(password.getText());
 
-                if(!emailTxt.isBlank() || !passTxt.isBlank()) {
+                if(!emailTxt.isBlank() && !passTxt.isBlank()) {
                     Log.d("Username", emailTxt + " " + passTxt);
                     hideKeyboard(view);
                     authLogin();

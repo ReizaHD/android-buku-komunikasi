@@ -1,4 +1,4 @@
-package com.example.bk.activities;
+package com.bintangjuara.bk.activities;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -27,11 +27,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.bk.R;
-import com.example.bk.models.UserData;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.bintangjuara.bk.R;
 
 import java.util.HashMap;
 import java.util.Map;

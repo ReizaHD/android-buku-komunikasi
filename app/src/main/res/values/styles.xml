@@ -28,4 +28,9 @@
     <style name="navBarStyle" parent="Widget.Material3.BottomNavigationView">
         <item name="itemPaddingTop">20dp</item>
     </style>
+    <style name="switchStyle" parent="Widget.Material3.CompoundButton.MaterialSwitch">
+        <item name="thumbTint">@color/switch_thumb_color</item>
+        <item name="trackTint">@color/switch_track_color</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
 </resources>

@@ -1,4 +1,4 @@
-package com.example.bk;
+package com.bintangjuara.bk;
 
 import org.junit.Test;
 

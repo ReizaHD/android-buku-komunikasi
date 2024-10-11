@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/card_mapel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/card_berita_bg"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/judul_berita_bg"
+            android:gravity="center_horizontal"
+            android:paddingVertical="5dp"
+            android:text="Pendidikan Pancasila"
+            android:fontFamily="@font/fredoka_one"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="10dp"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"
+            android:fontFamily="@font/inter"
+            android:text="Pekan ini Kak Sena belajar tentang aktivitas yang dapat dilakukan secara mandiri di rumah. Alhamdulillah Kak Sena dapat menyebutkan kegiatan yang dapat dilakukan di rumah. Kakak membutuhkan penguatan untuk mengidentifikasi aktivitas yang dapat dilakukan secara mandiri maupun masih membutuhkan bantuan orang tua." />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

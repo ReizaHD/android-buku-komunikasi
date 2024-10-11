@@ -1,16 +1,17 @@
-package com.example.bk.models;
+package com.bintangjuara.bk.models;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class Pemberitahuan {
+public class Berita implements Serializable {
     private String isiPesan, guru, murid;
     private Date tanggal;
     private boolean sudahDibaca;
 
-    public Pemberitahuan(String guru, String isiPesan, String tanggal, String murid, boolean sudahDibaca){
+    public Berita(String guru, String isiPesan, String tanggal, String murid, boolean sudahDibaca){
         this.guru = guru;
         this.isiPesan = isiPesan;
         this.murid = murid;

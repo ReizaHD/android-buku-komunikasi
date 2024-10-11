@@ -1,7 +1,5 @@
-package com.example.bk.fragments;
+package com.bintangjuara.bk.fragments;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,16 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import com.example.bk.R;
-import com.example.bk.adapters.MessageAdapter;
-import com.example.bk.models.Pemberitahuan;
-import com.example.bk.models.UserData;
+import com.bintangjuara.bk.R;
+import com.bintangjuara.bk.adapters.MessageAdapter;
+import com.bintangjuara.bk.models.Berita;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 
@@ -66,18 +60,18 @@ public class NotificationFragment extends Fragment {
         searchBar = view.findViewById(R.id.search_bar);
         refreshLayout = view.findViewById(R.id.refresh);
 
-        ArrayList<Pemberitahuan> listPemberitahuan = new ArrayList<>();
-        listPemberitahuan.add(new Pemberitahuan("Adi","Kegiatan siswa pada hari kamis " +
+        ArrayList<Berita> listBerita = new ArrayList<>();
+        listBerita.add(new Berita("Adi","Kegiatan siswa pada hari kamis " +
                 "adalah melakukan kunjungan ke salah satu masjid unik yang terletak di " +
                 "kabupaten semarang. para siswa didampingi bapak ibu guru berangkat menggunakan " +
                 "Bus dari SD Islam Bintang Juara pukul 08.00 pagi .....","16-05-2024","Budi",false));
-        listPemberitahuan.add(new Pemberitahuan("Adi","Ayah Bunda, Besok Jumat 17 Mei 2024 diharapkan kakak" +
+        listBerita.add(new Berita("Adi","Ayah Bunda, Besok Jumat 17 Mei 2024 diharapkan kakak" +
                 " kakak salih dan salihah membawa buku tulis dan tumbler untuk kegiatan outing class di" +
                 " sekitar sekolah. Ayah Bunda bisa menjemput Kakak Salih dan Salihah pada jam 17.00 setelah" +
                 " kegiatan","16-05-2024","Alan", false));
-        listPemberitahuan.add(new Pemberitahuan("Adi","Pemberitahuan hari Jumat","17-05-2024","Budi", false));
-        listPemberitahuan.add(new Pemberitahuan("Adi","Pemberitahuan hari Senin","20-05-2024","Budi", false));
-        listPemberitahuan.add(new Pemberitahuan("Adi","Pemberitahuan hari Selasa","21-05-2024","Budi", true));
+        listBerita.add(new Berita("Adi","Berita hari Jumat","17-05-2024","Budi", false));
+        listBerita.add(new Berita("Adi","Berita hari Senin","20-05-2024","Budi", false));
+        listBerita.add(new Berita("Adi","Berita hari Selasa","21-05-2024","Budi", true));
 
         MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
         builder.setTitleText("Select date")
@@ -108,7 +102,7 @@ public class NotificationFragment extends Fragment {
             }
         });
 
-        MessageAdapter adapter = new MessageAdapter(getContext(), listPemberitahuan);
+        MessageAdapter adapter = new MessageAdapter(getContext(), listBerita);
         list.setAdapter(adapter);
         pb.setVisibility(View.GONE);
         list.setVisibility(View.VISIBLE);

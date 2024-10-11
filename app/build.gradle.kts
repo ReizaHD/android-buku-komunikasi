@@ -1,13 +1,14 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("com.google.gms.google-services")
 }
 
 android {
-    namespace = "com.example.bk"
+    namespace = "com.bintangjuara.bk"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.bk"
+        applicationId = "com.bintangjuara.bk"
         minSdk = 21
         targetSdk = 34
         versionCode = 1
@@ -32,8 +33,12 @@ android {
 }
 
 dependencies {
-    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
-    implementation("com.google.code.gson:gson:2.10.1")
+    implementation(libs.swiperefreshlayout)
+    implementation(libs.gson)
+    implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.analytics)
+    implementation (libs.java.websocket)
     implementation(libs.volley)
     implementation(libs.glide)
     implementation(libs.appcompat)

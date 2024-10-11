@@ -1,36 +1,38 @@
-package com.example.bk.activities;
+package com.bintangjuara.bk.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
-import com.example.bk.adapters.MessageAdapter;
-import com.example.bk.models.Pemberitahuan;
-import com.example.bk.R;
-import com.example.bk.models.UserData;
-import com.example.bk.fragments.HomeFragment;
-import com.example.bk.fragments.NotificationFragment;
-import com.example.bk.fragments.ProfileFragment;
+import com.bintangjuara.bk.WebSocketService;
+import com.bintangjuara.bk.R;
+import com.bintangjuara.bk.models.UserData;
+import com.bintangjuara.bk.fragments.HomeFragment;
+import com.bintangjuara.bk.fragments.NotificationFragment;
+import com.bintangjuara.bk.fragments.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.util.ArrayList;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     int selectedNavItem;
     Fragment homeFragment, notificationFragment, profileFragment;
     private ActivityResultLauncher<Intent> activityResultLauncher;
+    boolean enableNotification = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,65 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        Intent intent = getIntent();
+        userData = (UserData) intent.getSerializableExtra("userData");
+        sharedPreferences = getSharedPreferences("login_session", Context.MODE_PRIVATE);
+
+        if (userData != null) {
+            Log.d("nama", userData.getName());
+            Log.d("email", userData.getEmail());
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Alert");
+            builder.setMessage("This is an alert dialog. Click OK to dismiss.");
+
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // Action when OK button is clicked
+                    dialog.dismiss();
+                }
+            });
+
+            AlertDialog alertDialog = builder.create();
+
+            // Set the onDismissListener
+            alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    // Action to be taken after the dialog is dismissed
+                    Log.d("AlertDialog", "Dialog dismissed. Perform post-dismiss actions here.");
+                    // Add more code here to execute after the dialog is dismissed
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    finish();
+                }
+            });
+
+            // Show the dialog
+            alertDialog.show();
+        }
+
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                Log.w("MainActivity", "Fetching FCM registration token failed", task.getException());
+                return;
+            }
+
+            // Get the FCM token
+            String token = task.getResult();
+            Log.d("MainActivity", "FCM Token: " + token);
+//            Toast.makeText(MainActivity.this, "FCM Token: " + token, Toast.LENGTH_SHORT).show();
+        });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                        100);
+            }
+        }
+
         activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result ->{
             if(result.getResultCode() == Activity.RESULT_OK){
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
@@ -59,23 +121,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        Intent intent = getIntent();
-        Log.d("State","before");
-        if (savedInstanceState != null) {
-            // Restore your object from savedInstanceState
-            Log.d("State","Not null");
-            userData = (UserData) savedInstanceState.getSerializable("userData");
-        } else {
-            userData = (UserData) intent.getSerializableExtra("userData");
-        }
-//        userData = (UserData) intent.getSerializableExtra("userData");
-
-        if (userData != null) {
-            Log.d("nama", userData.getName());
-            Log.d("email", userData.getEmail());
-        }
-
+        Intent serviceIntent = new Intent(this, WebSocketService.class);
 
         bundle = new Bundle();
         bundle.putSerializable("userData", userData);
@@ -98,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        sharedPreferences = getSharedPreferences("login_session", Context.MODE_PRIVATE);
+
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(item -> {
@@ -152,6 +198,28 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 100) {
+            // Check if the permission request was for notifications
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, enable notifications
+                enableNotifications();
+            }
+        }
+    }
+
+    private void enableNotifications() {
+        FirebaseMessaging.getInstance().subscribeToTopic("Berita");
+        sharedPreferences.edit().putBoolean("enableNotification", enableNotification).apply();
+    }
+
+    private void handlePermissionDenied() {
+        FirebaseMessaging.getInstance().unsubscribeFromTopic("Berita");
+        sharedPreferences.edit().putBoolean("enableNotification", enableNotification).apply();
     }
 
 }
