@@ -1,79 +1,222 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activities.ViewBeritaActivity">
-
-    <LinearLayout
-        android:id="@+id/id_layout"
+    android:layout_height="wrap_content"
+    tools:context=".activities.ViewBeritaActivity"
+    android:background="@color/white">
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/horizontal_margin"
-        android:layout_marginTop="30dp"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="30dp">
+        android:paddingBottom="30dp"
+        >
+        <LinearLayout
+            android:id="@+id/id_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/horizontal_margin"
+            android:layout_marginTop="30dp"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="30dp">
 
-        <ImageView
-            android:id="@+id/avatar"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:layout_marginRight="15dp"
-            android:src="@drawable/avatar_default" />
+            <ImageView
+                android:id="@+id/avatar"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_marginEnd="15dp"
+                android:src="@drawable/avatar_default" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/nama_siswa"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="0dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Abqory Fusena Anarghya Setiadi" />
+
+                <TextView
+                    android:id="@+id/kelas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="0dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Kelas 1A" />
+            </LinearLayout>
+        </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/pembelajaran"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            app:layout_constraintTop_toBottomOf="@+id/id_layout"
+            android:layout_marginHorizontal="@dimen/horizontal_margin"
+            android:layout_marginTop="30dp"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/nama_siswa"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="0dp"
-                android:layout_toEndOf="@+id/avatar"
-                android:text="Abqory Fusena Anarghya Setiadi" />
+                android:textSize="21sp"
+                android:fontFamily="@font/fredoka"
+                android:text="Pembelajaran"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/gray_line"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/list_catatan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:scrollbars="none"
+                android:visibility="visible"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tugas_weekend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/pembelajaran"
+            android:layout_marginHorizontal="@dimen/horizontal_margin"
+            android:layout_marginTop="30dp"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/kelas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/nama_siswa"
-                android:layout_marginStart="0dp"
-                android:layout_toEndOf="@+id/avatar"
-                android:text="Kelas 1A" />
+                android:textSize="21sp"
+                android:fontFamily="@font/fredoka"
+                android:text="Oleh-oleh Akhir Pekan"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/gray_line"/>
+            <TextView
+                android:id="@+id/tugas_weekend_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/card_berita_bg"
+                android:padding="10dp"
+                android:fontFamily="@font/inter"
+                android:text="Bahasa Inggris menuntaskan tantangan pada workbook halaman 15 Bahasa Indonesia menuntaskan tantangan untuk menceritakan kembali isi cerita &quot;Naik-Naik Ke Puncak Bukit&quot;\nP5 Menuntaskan tantangan pada lembar kerja di buku P5"/>
+
         </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/id_layout"
-        android:layout_marginHorizontal="@dimen/horizontal_margin"
-        android:layout_marginTop="30dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="21sp"
-            android:fontFamily="@font/fredoka"
-            android:text="Pembelajaran"/>
-        <ImageView
+        <LinearLayout
+            android:id="@+id/catatan_tambahan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/gray_line"/>
-        <ListView
-            android:id="@+id/list_catatan"
+            app:layout_constraintTop_toBottomOf="@+id/tugas_weekend"
+            android:layout_marginHorizontal="@dimen/horizontal_margin"
+            android:layout_marginTop="30dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="21sp"
+                android:fontFamily="@font/fredoka"
+                android:text="Catatan Tambahan"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/gray_line"/>
+            <TextView
+                android:id="@+id/catatan_tambahan_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/card_berita_bg"
+                android:padding="10dp"
+                android:fontFamily="@font/inter"
+                android:text="Assalamu'alaikum Ayah Bunda...
+Terimakasih atas feedback pekan lalu. Alhamdulillah Kak Sena sudah mulai belajar naik sepeda roda dua ketika di rumah.
+Semoga semakin lancar.
+Pekan ini Kakak mengikuti kegiatan P5 dalam tahap pengenalan. Kakak dikenalkan dengan jenis-jenis sampah (organik.
+anorganik dan B3). Kakak mendapatkan oleh-oleh untuk menuntaskan tantangan pada lembar kerja yang ditempel pada
+buku P5. Mohon pendampingan Ayah Bunda agar Kakak menuntaskan tantangan yang telah diberikan.
+"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ekstrakurikuler"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="none"
-            android:layout_marginTop="10dp"/>
-    </LinearLayout>
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toBottomOf="@+id/catatan_tambahan"
+            android:layout_marginHorizontal="@dimen/horizontal_margin"
+            android:layout_marginTop="30dp"
+            android:orientation="vertical">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="21sp"
+                android:fontFamily="@font/fredoka"
+                android:text="Ekstrakurikuler"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/gray_line"/>
+            <TextView
+                android:id="@+id/ekstrakurikuler_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/card_berita_bg"
+                android:padding="10dp"
+                android:fontFamily="@font/inter"
+                android:text="Bahasa Inggris menuntaskan tantangan pada workbook halaman 15 Bahasa Indonesia menuntaskan tantangan untuk menceritakan kembali isi cerita &quot;Naik-Naik Ke Puncak Bukit&quot;\nP5 Menuntaskan tantangan pada lembar kerja di buku P5"/>
 
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/catatan_ortu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toBottomOf="@+id/ekstrakurikuler"
+            android:layout_marginHorizontal="@dimen/horizontal_margin"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"
+            android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="21sp"
+                android:fontFamily="@font/fredoka"
+                android:text="Catatan Orang Tua"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/gray_line"/>
+            <TextView
+                android:id="@+id/catatan_ortu_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/card_berita_bg"
+                android:padding="10dp"
+                android:fontFamily="@font/inter"
+                android:text="Ayah Bunda dapat memberikan umpan balik berupa :
+1. Kegiatan keagamaan yang dilakukan di rumah. (Shalat, wudhu, mengaji, muraja'ah, puasa dan lainnya)\n
+2. Kegiatan stimulasi fisik, motorik kasar atau motorik halus yang dilakukan Ayah Bunda untuk Kakak di rumah\n
+3. Kegiatan stimulasi literasi dan numerasi yang dilakukan di rumah\n
+4. Kegiatan rumah tangga yang dilakukan Kakak di rumah\n
+5. Pengalaman bermakna tentang Kakak selama sepekan yang terjadi di luar kegiatan sekolah.\n
+6. Perkembangan sosial emosi yang terjadi di rumah."/>
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

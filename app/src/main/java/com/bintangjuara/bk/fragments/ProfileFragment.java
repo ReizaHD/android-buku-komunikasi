@@ -55,7 +55,7 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("login_session",MODE_PRIVATE);
         boolean enableNotification = sharedPreferences.getBoolean("enableNotification",false);
-
+        Log.d("enableNotification", String.valueOf(enableNotification));
         Button logoutBtn = view.findViewById(R.id.logout_btn);
         Button editPassBtn = view.findViewById(R.id.edit_password_btn);
 

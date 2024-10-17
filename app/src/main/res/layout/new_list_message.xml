@@ -2,7 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:layout_marginBottom="20dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -35,7 +37,7 @@
             android:padding="10dp"
             android:background="@drawable/card_round_bg">
             <!-- Text section (Name, Date, Description) -->
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -43,17 +45,21 @@
                 <!-- Student Name -->
                 <TextView
                     android:id="@+id/nama_siswa"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Nama Siswa"
+                    android:layout_toStartOf="@+id/info_button"
+                    android:paddingEnd="5dp"
+                    android:end="@+id/info_button"
                     android:fontFamily="@font/inter_bold"
-                    android:textSize="16sp"/>
+                    android:text="Nama Siswa"
+                    android:textSize="16sp" />
 
                 <!-- Date -->
                 <TextView
                     android:id="@+id/tanggal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/nama_siswa"
                     android:text="Kamis, 16 Mei 2024"
                     android:fontFamily="@font/inter"
                     android:textSize="16sp" />
@@ -64,26 +70,25 @@
                     android:layout_width="wrap_content"
                     android:layout_height="76dp"
                     android:layout_marginTop="12dp"
+                    android:layout_below="@id/tanggal"
                     android:text="Ayah Bunda, Besok Jumat 17 Mei 2024 diharapkan kakak kakak salih dan salihah membawa buku tulis dan tumbler untuk kegiatan outing class di sekitar sekolah. Ayah Bunda bisa menjemput Kakak Salih dan Salihah pada jam 17.00 setelah kegiatan"
                     android:fontFamily="@font/inter"
                     android:textSize="12sp"
                     android:maxLines="5"
                     android:ellipsize="end"
                     />
-
-            </LinearLayout>
-
-            <!-- Information Button -->
-            <Button
-                android:enabled="false"
-                android:id="@+id/info_button"
-                android:layout_width="wrap_content"
-                android:layout_height="25dp"
-                style="@style/textOnlyButtonStyle"
-                android:backgroundTint="#FFC107"
-                android:text="Informasi Umum"
-                android:textSize="10sp"
-                android:layout_alignParentEnd="true"/>
+                <!-- Information Button -->
+                <Button
+                    android:id="@+id/info_button"
+                    android:enabled="false"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    style="@style/textOnlyButtonStyle"
+                    android:backgroundTint="#FFC107"
+                    android:text="Informasi Umum"
+                    android:textSize="10sp"
+                    android:layout_alignParentEnd="true"/>
+            </RelativeLayout>
         </RelativeLayout>
     </LinearLayout>
 

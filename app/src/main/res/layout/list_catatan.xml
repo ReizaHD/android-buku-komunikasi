@@ -2,7 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:id="@+id/main"
+    android:layout_marginBottom="20dp">
 
     <LinearLayout
         android:id="@+id/card_mapel"
@@ -10,18 +12,21 @@
         android:layout_height="wrap_content"
         android:background="@drawable/card_berita_bg"
         android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginBottom="10dp">
 
         <TextView
+            android:id="@+id/nama_mapel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/judul_berita_bg"
+            android:background="@drawable/card_judul_berita_bg"
             android:gravity="center_horizontal"
             android:paddingVertical="5dp"
             android:text="Pendidikan Pancasila"
             android:fontFamily="@font/fredoka_one"/>
 
         <TextView
+            android:id="@+id/catatan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="10dp"

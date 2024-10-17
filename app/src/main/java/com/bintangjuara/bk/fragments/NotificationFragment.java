@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
@@ -28,7 +30,7 @@ import java.util.Locale;
 
 public class NotificationFragment extends Fragment {
 
-    ListView list;
+    RecyclerView list;
     ProgressBar pb;
     EditText searchBar;
     SwipeRefreshLayout refreshLayout;
@@ -61,17 +63,17 @@ public class NotificationFragment extends Fragment {
         refreshLayout = view.findViewById(R.id.refresh);
 
         ArrayList<Berita> listBerita = new ArrayList<>();
-        listBerita.add(new Berita("Adi","Kegiatan siswa pada hari kamis " +
+        listBerita.add(new Berita("Kegiatan siswa pada hari kamis " +
                 "adalah melakukan kunjungan ke salah satu masjid unik yang terletak di " +
                 "kabupaten semarang. para siswa didampingi bapak ibu guru berangkat menggunakan " +
-                "Bus dari SD Islam Bintang Juara pukul 08.00 pagi .....","16-05-2024","Budi",false));
-        listBerita.add(new Berita("Adi","Ayah Bunda, Besok Jumat 17 Mei 2024 diharapkan kakak" +
+                "Bus dari SD Islam Bintang Juara pukul 08.00 pagi ....."));
+        listBerita.add(new Berita("Ayah Bunda, Besok Jumat 17 Mei 2024 diharapkan kakak" +
                 " kakak salih dan salihah membawa buku tulis dan tumbler untuk kegiatan outing class di" +
                 " sekitar sekolah. Ayah Bunda bisa menjemput Kakak Salih dan Salihah pada jam 17.00 setelah" +
-                " kegiatan","16-05-2024","Alan", false));
-        listBerita.add(new Berita("Adi","Berita hari Jumat","17-05-2024","Budi", false));
-        listBerita.add(new Berita("Adi","Berita hari Senin","20-05-2024","Budi", false));
-        listBerita.add(new Berita("Adi","Berita hari Selasa","21-05-2024","Budi", true));
+                " kegiatan"));
+        listBerita.add(new Berita("Berita hari Jumat"));
+        listBerita.add(new Berita("Berita hari Senin"));
+        listBerita.add(new Berita("Berita hari Selasa"));
 
         MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
         builder.setTitleText("Select date")
@@ -103,6 +105,7 @@ public class NotificationFragment extends Fragment {
         });
 
         MessageAdapter adapter = new MessageAdapter(getContext(), listBerita);
+        list.setLayoutManager(new LinearLayoutManager(getContext()));
         list.setAdapter(adapter);
         pb.setVisibility(View.GONE);
         list.setVisibility(View.VISIBLE);

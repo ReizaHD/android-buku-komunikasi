@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
     int selectedNavItem;
     Fragment homeFragment, notificationFragment, profileFragment;
     private ActivityResultLauncher<Intent> activityResultLauncher;
-    boolean enableNotification = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
                         new String[]{Manifest.permission.POST_NOTIFICATIONS},
                         100);
             }
+        }else {
+            enableNotifications();
         }
 
         activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result ->{
@@ -214,12 +215,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void enableNotifications() {
         FirebaseMessaging.getInstance().subscribeToTopic("Berita");
-        sharedPreferences.edit().putBoolean("enableNotification", enableNotification).apply();
+        sharedPreferences.edit().putBoolean("enableNotification", true).apply();
     }
 
     private void handlePermissionDenied() {
         FirebaseMessaging.getInstance().unsubscribeFromTopic("Berita");
-        sharedPreferences.edit().putBoolean("enableNotification", enableNotification).apply();
+        sharedPreferences.edit().putBoolean("enableNotification", false).apply();
     }
 
 }
