@@ -33,4 +33,19 @@
         <item name="trackTint">@color/switch_track_color</item>
         <item name="android:textColor">@color/black</item>
     </style>
+    <style name="topBarTitleLarge" parent="TextAppearance.Material3.TitleLarge">
+        <item name="fontFamily">@font/fredoka_one</item>
+        <item name="android:fontFamily">@font/fredoka</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="topBarTitleMedium" parent="TextAppearance.Material3.TitleMedium">
+        <item name="fontFamily">@font/fredoka</item>
+        <item name="android:fontFamily">@font/fredoka</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="topBarStyle" parent="Widget.Material3.Toolbar">
+        <item name="titleTextAppearance">@style/topBarTitleLarge</item>
+        <item name="subtitleTextAppearance">@style/topBarTitleMedium</item>
+    </style>
 </resources>

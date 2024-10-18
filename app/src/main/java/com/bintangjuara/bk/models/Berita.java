@@ -34,6 +34,7 @@ public class Berita implements Serializable {
             "5. Pengalaman bermakna tentang Kakak selama sepekan yang terjadi di luar kegiatan sekolah.\n" +
             "6. Perkembangan sosial emosi yang terjadi di rumah.";
     private ArrayList<Pelajaran> pembelajaran;
+    private String balasan;
     private boolean sudahDibaca;
 
     public boolean isSudahDibaca() {
@@ -112,6 +113,14 @@ public class Berita implements Serializable {
 
     public void setTugasWeekend(String tugasWeekend) {
         this.tugasWeekend = tugasWeekend;
+    }
+
+    public String getBalasan() {
+        return balasan;
+    }
+
+    public void setBalasan(String balasan) {
+        this.balasan = balasan;
     }
 }
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -7,11 +7,33 @@
     android:layout_height="wrap_content"
     tools:context=".activities.ViewBeritaActivity"
     android:background="@color/white">
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:liftOnScroll="false">
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="Catatan"
+            app:subtitle="periode 7-14 Oktober"
+            app:titleCentered="true"
+            app:subtitleCentered="true"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:layout_scrollFlags="scroll|enterAlways"
+            android:background="#FFC200"
+            />
+    </com.google.android.material.appbar.AppBarLayout>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="?attr/actionBarSize">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="30dp"
         >
+
         <LinearLayout
             android:id="@+id/id_layout"
             android:layout_width="match_parent"
@@ -74,6 +96,7 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/list_catatan"
+                android:nestedScrollingEnabled="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -106,7 +129,7 @@
                 android:layout_height="wrap_content"
                 android:scrollbars="none"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/card_berita_bg"
+                android:background="@drawable/card_yellow"
                 android:padding="10dp"
                 android:fontFamily="@font/inter"
                 android:text="Bahasa Inggris menuntaskan tantangan pada workbook halaman 15 Bahasa Indonesia menuntaskan tantangan untuk menceritakan kembali isi cerita &quot;Naik-Naik Ke Puncak Bukit&quot;\nP5 Menuntaskan tantangan pada lembar kerja di buku P5"/>
@@ -137,7 +160,7 @@
                 android:layout_height="wrap_content"
                 android:scrollbars="none"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/card_berita_bg"
+                android:background="@drawable/card_yellow"
                 android:padding="10dp"
                 android:fontFamily="@font/inter"
                 android:text="Assalamu'alaikum Ayah Bunda...
@@ -174,7 +197,7 @@ buku P5. Mohon pendampingan Ayah Bunda agar Kakak menuntaskan tantangan yang tel
                 android:layout_height="wrap_content"
                 android:scrollbars="none"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/card_berita_bg"
+                android:background="@drawable/card_yellow"
                 android:padding="10dp"
                 android:fontFamily="@font/inter"
                 android:text="Bahasa Inggris menuntaskan tantangan pada workbook halaman 15 Bahasa Indonesia menuntaskan tantangan untuk menceritakan kembali isi cerita &quot;Naik-Naik Ke Puncak Bukit&quot;\nP5 Menuntaskan tantangan pada lembar kerja di buku P5"/>
@@ -206,7 +229,7 @@ buku P5. Mohon pendampingan Ayah Bunda agar Kakak menuntaskan tantangan yang tel
                 android:layout_height="wrap_content"
                 android:scrollbars="none"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/card_berita_bg"
+                android:background="@drawable/card_yellow"
                 android:padding="10dp"
                 android:fontFamily="@font/inter"
                 android:text="Ayah Bunda dapat memberikan umpan balik berupa :
@@ -218,5 +241,49 @@ buku P5. Mohon pendampingan Ayah Bunda agar Kakak menuntaskan tantangan yang tel
 6. Perkembangan sosial emosi yang terjadi di rumah."/>
 
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/feedback"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toBottomOf="@+id/catatan_ortu"
+            android:layout_marginHorizontal="@dimen/horizontal_margin"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="21sp"
+                android:fontFamily="@font/fredoka"
+                android:text="Balasan Orang Tua"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/gray_line"/>
+            <TextView
+                android:id="@+id/feedback_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/card_blue"
+                android:padding="10dp"
+                android:fontFamily="@font/inter"
+                android:text=""/>
+
+        </LinearLayout>
+        <Button
+            android:id="@+id/feedback_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/feedback"
+            android:layout_marginTop="20dp"
+            android:text="Buat Balasan"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
