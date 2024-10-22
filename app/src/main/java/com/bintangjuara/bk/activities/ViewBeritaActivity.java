@@ -60,7 +60,7 @@ public class ViewBeritaActivity extends AppCompatActivity {
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.setStatusBarColor(ContextCompat.getColor(this, R.color.yellow_light)); // Replace 'your_color' with your desired color
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.yellow_light));
 
         listPembelajaran = findViewById(R.id.list_catatan);
         Intent intent = getIntent();
@@ -126,6 +126,13 @@ public class ViewBeritaActivity extends AppCompatActivity {
                 alertDialog.show();
             }
         });
+
+        if(berita.getBalasan() != null){
+            if(!berita.getBalasan().isEmpty()) {
+                feedbackView.setVisibility(View.VISIBLE);
+                balasan.setText(berita.getBalasan());
+            }
+        }
 
         Log.d("Pelajaran", "Size : "+berita.getPembelajaran().size());
         for(Pelajaran i : berita.getPembelajaran()) {
@@ -194,49 +201,5 @@ public class ViewBeritaActivity extends AppCompatActivity {
             }
         }
     }
-
-//    public class CatatanAdapter extends BaseAdapter {
-//
-//        private Context ctx;
-//        private LayoutInflater inflater;
-//        private ArrayList<Pelajaran> pembelajaran;
-//
-//        public CatatanAdapter(Context ctx, ArrayList<Pelajaran> pembelajaran) {
-//            this.ctx = ctx;
-//            this.inflater = LayoutInflater.from(ctx);
-//            this.pembelajaran = pembelajaran;
-//            Log.d("Pembelajaran", "size"+pembelajaran.size());
-//        }
-//
-//        @Override
-//        public int getCount() {
-//            return pembelajaran.size();
-//        }
-//
-//        @Override
-//        public Object getItem(int i) {
-//            return null;
-//        }
-//
-//        @Override
-//        public long getItemId(int i) {
-//            return i;
-//        }
-//
-//        @Override
-//        public View getView(int i, View view, ViewGroup viewGroup) {
-//            Pelajaran pelajaran = pembelajaran.get(i);
-//            Log.d("Pembelajaran", ""+i);
-//            view = inflater.inflate(R.layout.list_catatan, null);
-//            TextView namaMapel = view.findViewById(R.id.nama_mapel);
-//            TextView catatan = view.findViewById(R.id.catatan);
-//
-//            namaMapel.setText(pelajaran.getMataPelajaran());
-//            catatan.setText(pelajaran.getIsi());
-//
-//            return view;
-//        }
-//    }
-
 
 }

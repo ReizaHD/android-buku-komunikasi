@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.HomeFragment">
+    tools:context=".fragments.HomeFragment"
+    android:paddingHorizontal="30dp"
+    android:paddingTop="30dp">
 
     <ProgressBar
         android:id="@+id/progress_bar"

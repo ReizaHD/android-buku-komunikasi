@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -24,15 +25,37 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.bintangjuara.bk.SharedViewModel;
 import com.bintangjuara.bk.WebSocketService;
 import com.bintangjuara.bk.R;
+import com.bintangjuara.bk.models.Berita;
+import com.bintangjuara.bk.models.Pelajaran;
 import com.bintangjuara.bk.models.UserData;
 import com.bintangjuara.bk.fragments.HomeFragment;
 import com.bintangjuara.bk.fragments.NotificationFragment;
 import com.bintangjuara.bk.fragments.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
     int selectedNavItem;
     Fragment homeFragment, notificationFragment, profileFragment;
     private ActivityResultLauncher<Intent> activityResultLauncher;
+    private SharedViewModel sharedViewModel;
+    ArrayList<Berita> beritaArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,14 +140,14 @@ public class MainActivity extends AppCompatActivity {
             enableNotifications();
         }
 
+        requestBerita();
+
         activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result ->{
             if(result.getResultCode() == Activity.RESULT_OK){
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 finish();
             }
         });
-
-        Intent serviceIntent = new Intent(this, WebSocketService.class);
 
         bundle = new Bundle();
         bundle.putSerializable("userData", userData);
@@ -144,8 +169,13 @@ public class MainActivity extends AppCompatActivity {
             activityResultLauncher.launch(passwordIntent);
         });
 
+        sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
+        sharedViewModel.getData().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
 
-
+            }
+        });
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(item -> {
@@ -221,6 +251,65 @@ public class MainActivity extends AppCompatActivity {
     private void handlePermissionDenied() {
         FirebaseMessaging.getInstance().unsubscribeFromTopic("Berita");
         sharedPreferences.edit().putBoolean("enableNotification", false).apply();
+    }
+
+    private void requestBerita(){
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        String url = "https://8e75-2001-448a-4003-22d0-1d72-bed-a623-725b.ngrok-free.app/buku_komunikasi/berita_rest.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("response", response);
+                        ArrayList<Berita> listBerita = new ArrayList<>();
+                        try {
+                            JSONArray jsonArray = new JSONArray(response);
+                            for(int i=0;i<jsonArray.length();i++){
+                                JSONObject obj = jsonArray.getJSONObject(i);
+                                String tugasWeekend = obj.getString("tugas");
+                                String catatan = obj.getString("catatan");
+                                String ekstrakurikuler = obj.getString("ekstrakurikuler");
+                                String catatanOrtu = obj.getString("catatan_ortu");
+                                JSONObject mapel = obj.getJSONObject("mata_pelajaran");
+
+                                ArrayList<Pelajaran> listPelajaran = new ArrayList<>();
+                                for (Iterator<String> it = mapel.keys(); it.hasNext(); ) {
+                                    String key = it.next();
+                                    listPelajaran.add(new Pelajaran(key, mapel.getString(key)));
+                                }
+                                listBerita.add(new Berita(tugasWeekend, catatan, ekstrakurikuler, catatanOrtu, listPelajaran));
+                            }
+                            Log.d("Array Size",""+listBerita.size());
+                            beritaArrayList = listBerita;
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Error", error.toString());
+            }
+        });
+//        {
+//            @Override
+//            protected Map<String, String> getParams() throws AuthFailureError {
+//                Map<String, String> params = new HashMap<>();
+//                params.put("user_id", "1");
+//                return params;
+//            }
+//
+//            @Override
+//            public Map<String, String> getHeaders() throws AuthFailureError {
+//                Map<String, String> headers = new HashMap<>();
+//                headers.put("X-API-KEY", "sso-ikitas_1993smb11");
+//                return headers;
+//            }
+//        };
+
+        requestQueue.add(stringRequest);
+
     }
 
 }

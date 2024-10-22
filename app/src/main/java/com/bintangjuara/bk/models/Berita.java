@@ -46,6 +46,13 @@ public class Berita implements Serializable {
     }
 
     public Berita() {
+        pembelajaran = new ArrayList<>();
+        pembelajaran.add(new Pelajaran("Pendidikan Pancasila", "Pekan ini Kak Sena belajar tentang aktivitas yang dapat dilakukan secara mandiri di rumah. Alhamdulillah Kak Sena dapat"+
+                "menyebutkan kegiatan yang dapat dilakukan di rumah. Kakak membutuhkan penguatan untuk mengidentifikasi aktivitas yang"+
+                "dapat dilakukan secara mandiri maupun masih membutuhkan bantuan orang tua."));
+        pembelajaran.add(new Pelajaran("Bahasa Inggris",
+                "Pekan ini Kakak recalling tentang penggunaan kata that is dan that are pada suatu kalimat. Kakak kemudian dikenalkan"+
+                        "dengan kosakata number dan shape.\n"+"Alhamdulillah Kak Sena dapat menuliskan kalimat number dan shape dari yang disajikan dengan bimbingan guru."));
     }
 
     public Berita(String catatan) {
@@ -121,6 +128,14 @@ public class Berita implements Serializable {
 
     public void setBalasan(String balasan) {
         this.balasan = balasan;
+    }
+
+    public Berita(String tugasWeekend, String catatan, String ekstrakurikuler, String catatanOrtu, ArrayList<Pelajaran> pembelajaran) {
+        this.tugasWeekend = tugasWeekend;
+        this.catatan = catatan;
+        this.ekstrakurikuler = ekstrakurikuler;
+        this.catatanOrtu = catatanOrtu;
+        this.pembelajaran = pembelajaran;
     }
 }
 

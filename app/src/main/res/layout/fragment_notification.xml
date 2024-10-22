@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.NotificationFragment">
+    tools:context=".fragments.NotificationFragment"
+    android:paddingHorizontal="30dp"
+    android:paddingTop="30dp">
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -23,9 +25,9 @@
             android:layout_marginHorizontal="20dp">
             <ImageView
                 android:id="@+id/ic_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_search"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_calendar"
                 android:layout_marginVertical="4dp"
                 android:layout_marginHorizontal="10dp"/>
             <EditText
@@ -33,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:hint="Search"
+                android:hint="Cari Tanggal"
                 android:focusable="false"
                 android:inputType="none"
                 android:layout_alignTop="@id/ic_search"
