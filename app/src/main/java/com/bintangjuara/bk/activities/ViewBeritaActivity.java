@@ -222,7 +222,7 @@ public class ViewBeritaActivity extends AppCompatActivity {
 
     private void requestReadBerita(String id){
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String url = "http://192.168.1.23/buku_komunikasi/berita_read.php";
+        String url = "http://192.168.1.4/buku_komunikasi/berita_read.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override

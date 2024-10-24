@@ -101,7 +101,7 @@ public class HomeFragment extends Fragment {
 
     private void requestBerita(){
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-        String url = "http://192.168.1.23/buku_komunikasi/berita_rest.php";
+        String url = "http://192.168.1.4/buku_komunikasi/berita_rest.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
