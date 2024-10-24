@@ -21,6 +21,7 @@ import android.widget.Toolbar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -32,12 +33,27 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bintangjuara.bk.R;
+import com.bintangjuara.bk.adapters.MessageAdapter;
 import com.bintangjuara.bk.models.Berita;
 import com.bintangjuara.bk.models.Pelajaran;
 import com.google.android.material.appbar.MaterialToolbar;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class ViewBeritaActivity extends AppCompatActivity {
 
@@ -150,6 +166,8 @@ public class ViewBeritaActivity extends AppCompatActivity {
             }
         });
 
+        requestReadBerita(berita.getId());
+
     }
 
     public class CatatanAdapter extends RecyclerView.Adapter<CatatanAdapter.CatatanViewHolder> {
@@ -200,6 +218,33 @@ public class ViewBeritaActivity extends AppCompatActivity {
                 card = itemView.findViewById(R.id.main);
             }
         }
+    }
+
+    private void requestReadBerita(String id){
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        String url = "http://192.168.1.23/buku_komunikasi/berita_read.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("response", response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Error", error.toString());
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("id",id);
+                return params;
+            }
+        };
+
+        requestQueue.add(stringRequest);
+
     }
 
 }

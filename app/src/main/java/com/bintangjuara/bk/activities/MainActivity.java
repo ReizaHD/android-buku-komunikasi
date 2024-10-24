@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -135,12 +136,12 @@ public class MainActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.POST_NOTIFICATIONS},
                         100);
+            }else {
+                enableNotifications();
             }
         }else {
             enableNotifications();
         }
-
-        requestBerita();
 
         activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result ->{
             if(result.getResultCode() == Activity.RESULT_OK){
@@ -186,7 +187,9 @@ public class MainActivity extends AppCompatActivity {
             if (itemId == R.id.nav_home) {
                 if (selectedNavItem == R.id.nav_home) {
                     // Pressed twice, refresh the fragment
-                    selectedFragment = new HomeFragment();
+                    homeFragment = new HomeFragment();
+                    homeFragment.setArguments(bundle);
+                    selectedFragment = homeFragment;
                 } else {
                     // Use existing fragment if available
                     if (homeFragment == null) {
@@ -198,7 +201,9 @@ public class MainActivity extends AppCompatActivity {
             } else if (itemId == R.id.nav_notification) {
                 if (selectedNavItem == R.id.nav_notification) {
                     // Pressed twice, refresh the fragment
-                    selectedFragment = new NotificationFragment();
+                    notificationFragment = new NotificationFragment();
+                    notificationFragment.setArguments(bundle);
+                    selectedFragment = notificationFragment;
                 } else {
                     if (notificationFragment == null) {
                         notificationFragment = new NotificationFragment();
@@ -209,7 +214,9 @@ public class MainActivity extends AppCompatActivity {
             } else if (itemId == R.id.nav_profile) {
                 if (selectedNavItem == R.id.nav_profile) {
                     // Pressed twice, refresh the fragment
-                    selectedFragment = new ProfileFragment();
+                    profileFragment = new ProfileFragment();
+                    profileFragment.setArguments(bundle);
+                    selectedFragment = profileFragment;
                 } else {
                     if (profileFragment == null) {
                         profileFragment = new ProfileFragment();
@@ -253,63 +260,5 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences.edit().putBoolean("enableNotification", false).apply();
     }
 
-    private void requestBerita(){
-
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String url = "https://8e75-2001-448a-4003-22d0-1d72-bed-a623-725b.ngrok-free.app/buku_komunikasi/berita_rest.php";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d("response", response);
-                        ArrayList<Berita> listBerita = new ArrayList<>();
-                        try {
-                            JSONArray jsonArray = new JSONArray(response);
-                            for(int i=0;i<jsonArray.length();i++){
-                                JSONObject obj = jsonArray.getJSONObject(i);
-                                String tugasWeekend = obj.getString("tugas");
-                                String catatan = obj.getString("catatan");
-                                String ekstrakurikuler = obj.getString("ekstrakurikuler");
-                                String catatanOrtu = obj.getString("catatan_ortu");
-                                JSONObject mapel = obj.getJSONObject("mata_pelajaran");
-
-                                ArrayList<Pelajaran> listPelajaran = new ArrayList<>();
-                                for (Iterator<String> it = mapel.keys(); it.hasNext(); ) {
-                                    String key = it.next();
-                                    listPelajaran.add(new Pelajaran(key, mapel.getString(key)));
-                                }
-                                listBerita.add(new Berita(tugasWeekend, catatan, ekstrakurikuler, catatanOrtu, listPelajaran));
-                            }
-                            Log.d("Array Size",""+listBerita.size());
-                            beritaArrayList = listBerita;
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("Error", error.toString());
-            }
-        });
-//        {
-//            @Override
-//            protected Map<String, String> getParams() throws AuthFailureError {
-//                Map<String, String> params = new HashMap<>();
-//                params.put("user_id", "1");
-//                return params;
-//            }
-//
-//            @Override
-//            public Map<String, String> getHeaders() throws AuthFailureError {
-//                Map<String, String> headers = new HashMap<>();
-//                headers.put("X-API-KEY", "sso-ikitas_1993smb11");
-//                return headers;
-//            }
-//        };
-
-        requestQueue.add(stringRequest);
-
-    }
 
 }

@@ -5,6 +5,7 @@ import static android.content.Context.MODE_PRIVATE;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -76,6 +77,14 @@ public class ProfileFragment extends Fragment {
 
         nama.add("Reiza Hersa Dwitama");
         kelas.add("10 MIPA 1");
+        nama.add("Reiza Hersa Dwitama");
+        kelas.add("10 MIPA 1");
+        nama.add("Reiza Hersa Dwitama");
+        kelas.add("10 MIPA 1");
+        nama.add("Reiza Hersa Dwitama");
+        kelas.add("10 MIPA 1");
+        nama.add("Reiza Hersa Dwitama");
+        kelas.add("10 MIPA 1");
 
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
         AnakAdapter adapter = new AnakAdapter(getContext(), nama, kelas);
@@ -127,6 +136,18 @@ public class ProfileFragment extends Fragment {
 
         Context ctx;
         ArrayList<String> nama, kelas;
+        float[] bottomRound = new float[]{
+                0f, 0f,        // Top-left corner radius
+                0f, 0f,        // Top-right corner radius
+                30f, 30f,      // Bottom-right corner radius (change these values)
+                30f, 30f         // Bottom-left corner radius
+        };
+        float[] topRound = new float[]{
+                30f, 30f,        // Top-left corner radius
+                30f, 30f,        // Top-right corner radius
+                0f, 0f,      // Bottom-right corner radius (change these values)
+                0f, 0f         // Bottom-left corner radius
+        };
 
         public AnakAdapter(Context ctx, ArrayList<String> nama, ArrayList<String> kelas) {
             this.ctx = ctx;
@@ -143,8 +164,18 @@ public class ProfileFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull AnakViewHolder holder, int position) {
+
+            Log.d("COunt",String.valueOf(getItemCount()));
             holder.mNama.setText(nama.get(position));
             holder.mKelas.setText(kelas.get(position));
+            if(position == 0){
+                holder.mainLayout.setBackgroundResource(R.drawable.card_yellow_round_top);
+                Log.d("FIRST", "true");
+            }else if(position == nama.size()-1){
+                holder.mainLayout.setBackgroundResource(R.drawable.card_yellow_round_bottom);
+                Log.d("LAST", "true");
+            }
+
         }
 
         @Override
@@ -155,12 +186,16 @@ public class ProfileFragment extends Fragment {
 
         public class AnakViewHolder extends RecyclerView.ViewHolder{
             TextView mNama, mKelas;
+            LinearLayout mainLayout;
 
             public AnakViewHolder(@NonNull View itemView) {
                 super(itemView);
                 mNama = itemView.findViewById(R.id.nama_anak);
                 mKelas = itemView.findViewById(R.id.kelas_anak);
+                mainLayout = itemView.findViewById(R.id.main);
             }
         }
+
+
     }
 }

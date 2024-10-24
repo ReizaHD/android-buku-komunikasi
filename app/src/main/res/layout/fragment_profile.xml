@@ -27,7 +27,7 @@
             <LinearLayout
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/profile_card_bg"
+                android:background="@drawable/card_yellow_round"
                 android:layout_gravity="center_horizontal"
                 android:orientation="vertical"
                 android:paddingHorizontal="10dp"
@@ -80,11 +80,8 @@
             <LinearLayout
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/card_yellow"
                 android:layout_marginTop="25dp"
                 android:layout_gravity="center_horizontal"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="15dp"
                 >
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/list_anak"

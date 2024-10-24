@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class Berita implements Serializable {
+    private String id;
     private String namaSiswa = "Abqory Fusena Anarghya Setiadi";
     private String kelas = "Kelas 1A";
     private String periode = ": 7 - 11 Oktober 2024";
@@ -130,12 +131,17 @@ public class Berita implements Serializable {
         this.balasan = balasan;
     }
 
-    public Berita(String tugasWeekend, String catatan, String ekstrakurikuler, String catatanOrtu, ArrayList<Pelajaran> pembelajaran) {
+    public Berita(String id, String tugasWeekend, String catatan, String ekstrakurikuler, String catatanOrtu, ArrayList<Pelajaran> pembelajaran) {
+        this.id = id;
         this.tugasWeekend = tugasWeekend;
         this.catatan = catatan;
         this.ekstrakurikuler = ekstrakurikuler;
         this.catatanOrtu = catatanOrtu;
         this.pembelajaran = pembelajaran;
+    }
+
+    public String getId() {
+        return id;
     }
 }
 

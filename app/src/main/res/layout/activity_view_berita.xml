@@ -129,7 +129,7 @@
                 android:layout_height="wrap_content"
                 android:scrollbars="none"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/card_yellow"
+                android:background="@drawable/card_yellow_round"
                 android:padding="10dp"
                 android:fontFamily="@font/inter"
                 android:text="Bahasa Inggris menuntaskan tantangan pada workbook halaman 15 Bahasa Indonesia menuntaskan tantangan untuk menceritakan kembali isi cerita &quot;Naik-Naik Ke Puncak Bukit&quot;\nP5 Menuntaskan tantangan pada lembar kerja di buku P5"/>
@@ -160,7 +160,7 @@
                 android:layout_height="wrap_content"
                 android:scrollbars="none"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/card_yellow"
+                android:background="@drawable/card_yellow_round"
                 android:padding="10dp"
                 android:fontFamily="@font/inter"
                 android:text="Assalamu'alaikum Ayah Bunda...
@@ -197,7 +197,7 @@ buku P5. Mohon pendampingan Ayah Bunda agar Kakak menuntaskan tantangan yang tel
                 android:layout_height="wrap_content"
                 android:scrollbars="none"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/card_yellow"
+                android:background="@drawable/card_yellow_round"
                 android:padding="10dp"
                 android:fontFamily="@font/inter"
                 android:text="Bahasa Inggris menuntaskan tantangan pada workbook halaman 15 Bahasa Indonesia menuntaskan tantangan untuk menceritakan kembali isi cerita &quot;Naik-Naik Ke Puncak Bukit&quot;\nP5 Menuntaskan tantangan pada lembar kerja di buku P5"/>
@@ -229,7 +229,7 @@ buku P5. Mohon pendampingan Ayah Bunda agar Kakak menuntaskan tantangan yang tel
                 android:layout_height="wrap_content"
                 android:scrollbars="none"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/card_yellow"
+                android:background="@drawable/card_yellow_round"
                 android:padding="10dp"
                 android:fontFamily="@font/inter"
                 android:text="Ayah Bunda dapat memberikan umpan balik berupa :
@@ -268,7 +268,7 @@ buku P5. Mohon pendampingan Ayah Bunda agar Kakak menuntaskan tantangan yang tel
                 android:layout_height="wrap_content"
                 android:scrollbars="none"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/card_blue"
+                android:background="@drawable/card_blue_round"
                 android:padding="10dp"
                 android:fontFamily="@font/inter"
                 android:text=""/>
