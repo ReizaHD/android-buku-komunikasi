@@ -34,11 +34,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bintangjuara.bk.R;
+import com.bintangjuara.bk.RequestBK;
+import com.bintangjuara.bk.models.Berita;
 import com.bintangjuara.bk.models.UserData;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -136,7 +139,6 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-
     void authLogin(){
         pb.setVisibility(View.VISIBLE);
         loginBtn.setVisibility(View.GONE);
@@ -145,69 +147,119 @@ public class LoginActivity extends AppCompatActivity {
         password.setEnabled(false);
         showPass.setEnabled(false);
 
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String url = "https://siakad.bintangjuara.sch.id/rest_mobile/rest_user";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
+        Map<String, String> body = new HashMap<>();
+        body.put("email", emailTxt);
+        body.put("password", passTxt);
+
+        RequestBK requestBK = RequestBK.getInstance(this);
+        requestBK.requestUser(
+                body,
+                new RequestBK.UserListener() {
                     @Override
-                    public void onResponse(String response) {
-                        Log.d("response", response);
-                        try {
-                            JSONObject json = new JSONObject(response);
-                            String data = json.getString("data");
-                            UserData userData = new UserData(data);
+                    public void onResponse(UserData userData) {
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("email", emailTxt);
+                        editor.putString("password", passTxt);
+                        editor.putBoolean("isLoggedIn", true);
+                        editor.apply();
 
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("email", emailTxt);
-                            editor.putString("password", passTxt);
-                            editor.putBoolean("isLoggedIn", true);
-                            editor.apply();
-
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            intent.putExtra("userData", userData);
-                            startActivity(intent);
-                            finish();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.putExtra("userData", userData);
+                        startActivity(intent);
+                        finish();
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                if (error instanceof NoConnectionError) {
-                    // Handle no internet connection case
-                    builder.setMessage("Tidak dapat terhubung ke internet");
-                    builder.show();
-                }else{
-                    builder.setMessage("Email atau password salah").setTitle("Gagal Login");
-                    builder.show();
+
+                    @Override
+                    public void onError(Exception error) {
+                    if (error instanceof NoConnectionError) {
+                        // Handle no internet connection case
+                        builder.setMessage("Tidak dapat terhubung ke internet");
+                        builder.show();
+                    }else{
+                        builder.setMessage("Email atau password salah").setTitle("Gagal Login");
+                        builder.show();
+                    }
+                    Log.e("Error", error.toString());
+                    pb.setVisibility(View.GONE);
+                    loginBtn.setVisibility(View.VISIBLE);
+                    email.setEnabled(true);
+                    password.setEnabled(true);
+                    }
                 }
-                Log.e("Error", error.toString());
-                pb.setVisibility(View.GONE);
-                loginBtn.setVisibility(View.VISIBLE);
-                email.setEnabled(true);
-                password.setEnabled(true);
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("email", emailTxt);
-                params.put("password", passTxt);
-                return params;
-            }
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> headers = new HashMap<>();
-                headers.put("X-API-KEY", "sso-ikitas_1993smb11");
-                return headers;
-            }
-        };
-
-        requestQueue.add(stringRequest);
-
+        );
     }
+
+//    void authLogin(){
+//        pb.setVisibility(View.VISIBLE);
+//        loginBtn.setVisibility(View.GONE);
+//
+//        email.setEnabled(false);
+//        password.setEnabled(false);
+//        showPass.setEnabled(false);
+//
+//        RequestQueue requestQueue = Volley.newRequestQueue(this);
+//        String url = "https://siakad.bintangjuara.sch.id/rest_mobile/rest_user";
+//        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+//                new Response.Listener<String>() {
+//                    @Override
+//                    public void onResponse(String response) {
+//                        Log.d("response", response);
+//                        try {
+//                            JSONObject json = new JSONObject(response);
+//                            String data = json.getString("data");
+//                            UserData userData = new UserData(data);
+//
+//                            SharedPreferences.Editor editor = sharedPreferences.edit();
+//                            editor.putString("email", emailTxt);
+//                            editor.putString("password", passTxt);
+//                            editor.putBoolean("isLoggedIn", true);
+//                            editor.apply();
+//
+//                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+//                            intent.putExtra("userData", userData);
+//                            startActivity(intent);
+//                            finish();
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                if (error instanceof NoConnectionError) {
+//                    // Handle no internet connection case
+//                    builder.setMessage("Tidak dapat terhubung ke internet");
+//                    builder.show();
+//                }else{
+//                    builder.setMessage("Email atau password salah").setTitle("Gagal Login");
+//                    builder.show();
+//                }
+//                Log.e("Error", error.toString());
+//                pb.setVisibility(View.GONE);
+//                loginBtn.setVisibility(View.VISIBLE);
+//                email.setEnabled(true);
+//                password.setEnabled(true);
+//            }
+//        }) {
+//            @Override
+//            protected Map<String, String> getParams() throws AuthFailureError {
+//                Map<String, String> params = new HashMap<>();
+//                params.put("email", emailTxt);
+//                params.put("password", passTxt);
+//                return params;
+//            }
+//
+//            @Override
+//            public Map<String, String> getHeaders() throws AuthFailureError {
+//                Map<String, String> headers = new HashMap<>();
+//                headers.put("X-API-KEY", "sso-ikitas_1993smb11");
+//                return headers;
+//            }
+//        };
+//
+//        requestQueue.add(stringRequest);
+//
+//    }
 
     public void hideKeyboard(View view) {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

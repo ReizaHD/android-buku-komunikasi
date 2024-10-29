@@ -41,6 +41,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bintangjuara.bk.R;
+import com.bintangjuara.bk.RequestBK;
 import com.bintangjuara.bk.adapters.MessageAdapter;
 import com.bintangjuara.bk.models.Berita;
 import com.bintangjuara.bk.models.Pelajaran;
@@ -62,6 +63,7 @@ public class ViewBeritaActivity extends AppCompatActivity {
     Button feedbackBtn;
     LinearLayout feedbackView;
     MaterialToolbar topBar;
+    AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +109,7 @@ public class ViewBeritaActivity extends AppCompatActivity {
 
         builder.setView(dialogView);
 
-        AlertDialog alertDialog = builder.create();
+        alertDialog = builder.create();
         alertDialog.setCanceledOnTouchOutside(false);
 
         EditText feedbackDialogEditText = dialogView.findViewById(R.id.feedback_edit_text);
@@ -123,8 +125,11 @@ public class ViewBeritaActivity extends AppCompatActivity {
                     feedbackView.setVisibility(View.VISIBLE);
                     balasan.setText(inputText);
                     Log.d("Feedback", inputText);
+                    feedbackDialogEditText.setEnabled(false);
+                    submitDialogBtn.setEnabled(false);
+                    cancelDialogBtn.setEnabled(false);
                     feedbackDialogEditText.setText("");
-                    alertDialog.dismiss();
+                    insertUserFeedback(berita.getId(), inputText);
                 }
             }
         });
@@ -165,7 +170,7 @@ public class ViewBeritaActivity extends AppCompatActivity {
                 finish();
             }
         });
-
+        Log.d("ID", berita.getId());
         requestReadBerita(berita.getId());
 
     }
@@ -221,29 +226,35 @@ public class ViewBeritaActivity extends AppCompatActivity {
     }
 
     private void requestReadBerita(String id){
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String url = "http://192.168.1.4/buku_komunikasi/berita_read.php";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d("response", response);
-                    }
-                }, new Response.ErrorListener() {
+        RequestBK requestBK = RequestBK.getInstance(this);
+        requestBK.beritaRead(id, new RequestBK.ResponseListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("Error", error.toString());
+            public void onResponse(String response) {
+                Log.d("Response", response);
             }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("id",id);
-                return params;
-            }
-        };
 
-        requestQueue.add(stringRequest);
+            @Override
+            public void onError(Exception error) {
+                Log.e("Response", error.toString());
+            }
+        });
+    }
+
+    private void insertUserFeedback(String id, String msg){
+        RequestBK requestBK = RequestBK.getInstance(this);
+        requestBK.insertFeedback(msg, id, new RequestBK.ResponseListener() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("response", response);
+                alertDialog.dismiss();
+            }
+
+            @Override
+            public void onError(Exception error) {
+                Log.e("Error", error.toString());
+                alertDialog.dismiss();
+            }
+        });
 
     }
 

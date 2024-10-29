@@ -144,17 +144,3 @@ public class Berita implements Serializable {
         return id;
     }
 }
-
-//    public String getTanggalText() {
-//        SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("id", "ID"));
-//        return sdf.format(tanggal);
-//    }
-//
-//    public void setTanggal(String tanggal) {
-//        try {
-//            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-//            this.tanggal = dateFormat.parse(tanggal);
-//        }catch (ParseException e){
-//            e.printStackTrace();
-//        }
-//    }

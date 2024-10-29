@@ -71,23 +71,18 @@ public class ProfileFragment extends Fragment {
 
         ArrayList<String> nama = new ArrayList<>();
         ArrayList<String> kelas = new ArrayList<>();
+        ArrayList<String> id = new ArrayList<>();
 
         nama.add("Abqory Fusena Anarghya Setiadi");
         kelas.add("1A");
+        id.add("1");
 
         nama.add("Reiza Hersa Dwitama");
         kelas.add("10 MIPA 1");
-        nama.add("Reiza Hersa Dwitama");
-        kelas.add("10 MIPA 1");
-        nama.add("Reiza Hersa Dwitama");
-        kelas.add("10 MIPA 1");
-        nama.add("Reiza Hersa Dwitama");
-        kelas.add("10 MIPA 1");
-        nama.add("Reiza Hersa Dwitama");
-        kelas.add("10 MIPA 1");
+        id.add("2");
 
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
-        AnakAdapter adapter = new AnakAdapter(getContext(), nama, kelas);
+        AnakAdapter adapter = new AnakAdapter(getContext(), nama, kelas, id);
         listView.setAdapter(adapter);
 
         profileName = view.findViewById(R.id.profile_name);
@@ -130,12 +125,13 @@ public class ProfileFragment extends Fragment {
                 }
             }
         });
+
     }
 
     public class AnakAdapter extends RecyclerView.Adapter<AnakAdapter.AnakViewHolder>{
 
         Context ctx;
-        ArrayList<String> nama, kelas;
+        ArrayList<String> nama, kelas, id;
         float[] bottomRound = new float[]{
                 0f, 0f,        // Top-left corner radius
                 0f, 0f,        // Top-right corner radius
@@ -149,10 +145,11 @@ public class ProfileFragment extends Fragment {
                 0f, 0f         // Bottom-left corner radius
         };
 
-        public AnakAdapter(Context ctx, ArrayList<String> nama, ArrayList<String> kelas) {
+        public AnakAdapter(Context ctx, ArrayList<String> nama, ArrayList<String> kelas, ArrayList<String> id) {
             this.ctx = ctx;
             this.nama = nama;
             this.kelas = kelas;
+            this.id = id;
         }
 
         @NonNull
@@ -175,6 +172,12 @@ public class ProfileFragment extends Fragment {
                 holder.mainLayout.setBackgroundResource(R.drawable.card_yellow_round_bottom);
                 Log.d("LAST", "true");
             }
+            holder.mainLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    filterNama(id.get(holder.getAdapterPosition()));
+                }
+            });
 
         }
 
@@ -195,7 +198,12 @@ public class ProfileFragment extends Fragment {
                 mainLayout = itemView.findViewById(R.id.main);
             }
         }
-
-
     }
+
+    public void filterNama(String id){
+        Bundle bundle = new Bundle();
+        bundle.putString("id", id);
+        getParentFragmentManager().setFragmentResult("filter", bundle);
+    }
+
 }

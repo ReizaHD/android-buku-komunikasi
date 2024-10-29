@@ -153,6 +153,8 @@ public class MainActivity extends AppCompatActivity {
         bundle = new Bundle();
         bundle.putSerializable("userData", userData);
 
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
         selectedNavItem = R.id.nav_home;
         homeFragment = new HomeFragment();
         homeFragment.setArguments(bundle);
@@ -170,6 +172,18 @@ public class MainActivity extends AppCompatActivity {
             activityResultLauncher.launch(passwordIntent);
         });
 
+        getSupportFragmentManager().setFragmentResultListener("filter", this, (requestKey, result) -> {
+            Log.d("Fragment","Search NAMA");
+            String id = result.getString("id");
+            Log.d("ID", id);
+            Bundle filterBundle = new Bundle();
+            filterBundle.putString("id", id);
+            notificationFragment = new NotificationFragment();
+            notificationFragment.setArguments(filterBundle);
+            bottomNavigationView.setSelectedItemId(R.id.nav_notification);
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, notificationFragment).commit();
+        });
+
         sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
         sharedViewModel.getData().observe(this, new Observer<String>() {
             @Override
@@ -178,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
         bottomNavigationView.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
             int itemId = item.getItemId();
