@@ -14,7 +14,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bintangjuara.bk.adapters.MessageAdapter;
 import com.bintangjuara.bk.models.Berita;
+import com.bintangjuara.bk.models.NewBerita;
 import com.bintangjuara.bk.models.Pelajaran;
+import com.bintangjuara.bk.models.Student;
 import com.bintangjuara.bk.models.UserData;
 
 import org.json.JSONArray;
@@ -100,19 +102,27 @@ public class RequestBK {
                         JSONArray jsonArray = responseJson.getJSONArray("data");
                         for(int i=0;i<jsonArray.length();i++){
                             JSONObject obj = jsonArray.getJSONObject(i);
-                            String id = obj.getString("feedback_id");
-                            String tugasWeekend = obj.getString("weekend_assignment");
-                            String catatan = obj.getString("additional_feedback");
-                            String ekstrakurikuler = obj.getString("extracurricular");
-                            String catatanOrtu = "NULL";
-                            JSONObject mapel = obj.getJSONObject("subjects");
-
-                            ArrayList<Pelajaran> listPelajaran = new ArrayList<>();
-                            for (Iterator<String> it = mapel.keys(); it.hasNext(); ) {
-                                String key = it.next();
-                                listPelajaran.add(new Pelajaran(key, mapel.getString(key)));
+                            int feedbackId = obj.getInt("feedback_id");
+                            int studentId = obj.getInt("student_id");
+                            String studentName = obj.getString("student_name");
+                            String studentClass = obj.getString("student_class");
+                            String weekendAssignment = obj.getString("weekend_assignment");
+                            String additionalFeedback = obj.getString("additional_feedback");
+                            String extracurricular = obj.getString("extracurricular");
+                            boolean isRead = obj.getBoolean("is_read");
+                            String date = obj.getString("date");
+                            String parentFeedback = "";
+                            if(!obj.isNull("parent_feedback")){
+                                parentFeedback = obj.getString("parent_feedback");
                             }
-                            listBerita.add(new Berita(id,tugasWeekend, catatan, ekstrakurikuler, catatanOrtu, listPelajaran));
+                            JSONObject subjects = obj.getJSONObject("subjects");
+
+                            ArrayList<Pelajaran> listSubject = new ArrayList<>();
+                            for (Iterator<String> it = subjects.keys(); it.hasNext(); ) {
+                                String key = it.next();
+                                listSubject.add(new Pelajaran(key, subjects.getString(key)));
+                            }
+                            listBerita.add(new Berita(feedbackId, studentId, studentName, studentClass, listSubject, weekendAssignment, additionalFeedback, extracurricular, parentFeedback, isRead, date));
                         }
                     } catch (JSONException e) {
                         Log.e("JSON Exception", e.toString());
@@ -161,6 +171,39 @@ public class RequestBK {
         getRequestQueue().add(stringRequest);
     }
 
+    public void requestStudent(int userId, StudentListener listener){
+        StringRequest stringRequest = new StringRequest(
+                Request.Method.POST,
+                TEMP_URL + "student_rest.php",
+                response -> {
+                    ArrayList<Student> students = new ArrayList<>();
+                    try {
+                        JSONArray jsonArray = new JSONArray(response);
+                        for(int i=0; i < jsonArray.length(); i++){
+                            JSONObject obj = jsonArray.getJSONObject(i);
+                            int id = obj.getInt("id");
+                            String name = obj.getString("name");
+                            String className = obj.getString("class");
+                            students.add(new Student(id, name, className));
+                        }
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                    listener.onResponse(students);
+                },
+                listener::onError
+        ){
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> body = new HashMap<>();
+                body.put("user_id", String.valueOf(userId));
+                return body;
+            }
+        };
+        getRequestQueue().add(stringRequest);
+    }
+
     public interface ResponseListener{
         void onResponse(String response);
         void onError(Exception error);
@@ -173,6 +216,11 @@ public class RequestBK {
 
     public interface BeritaListener{
         void onResponse(ArrayList<Berita> listBerita);
+        void onError(Exception error);
+    }
+
+    public interface StudentListener{
+        void onResponse(ArrayList<Student> students);
         void onError(Exception error);
     }
 }

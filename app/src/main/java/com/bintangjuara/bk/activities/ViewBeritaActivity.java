@@ -30,6 +30,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -42,6 +43,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bintangjuara.bk.R;
 import com.bintangjuara.bk.RequestBK;
+import com.bintangjuara.bk.SharedViewModel;
 import com.bintangjuara.bk.adapters.MessageAdapter;
 import com.bintangjuara.bk.models.Berita;
 import com.bintangjuara.bk.models.Pelajaran;
@@ -80,6 +82,7 @@ public class ViewBeritaActivity extends AppCompatActivity {
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.yellow_light));
 
+
         listPembelajaran = findViewById(R.id.list_catatan);
         Intent intent = getIntent();
         Berita berita = (Berita) intent.getSerializableExtra("berita");
@@ -93,12 +96,11 @@ public class ViewBeritaActivity extends AppCompatActivity {
         balasan = findViewById(R.id.feedback_card);
         topBar = findViewById(R.id.top_bar);
 
-        namaSiswa.setText(berita.getNamaSiswa());
-        kelas.setText(berita.getKelas());
-        tugasWeekend.setText(berita.getTugasWeekend());
-        catatan.setText(berita.getCatatan());
-        ekstrakurikuler.setText(berita.getEkstrakurikuler());
-        catatanOrtu.setText(berita.getCatatanOrtu());
+        namaSiswa.setText(berita.getStudentName());
+        kelas.setText(berita.getStudentClass());
+        tugasWeekend.setText(berita.getWeekendAssignment());
+        catatan.setText(berita.getAdditionalFeedback());
+        ekstrakurikuler.setText(berita.getExtracurricular());
 
         feedbackView = findViewById(R.id.feedback);
         feedbackBtn = findViewById(R.id.feedback_button);
@@ -121,7 +123,7 @@ public class ViewBeritaActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String inputText = feedbackDialogEditText.getText().toString();
                 if(!inputText.isEmpty()) {
-                    berita.setBalasan(inputText);
+                    berita.setParentFeedback(inputText);
                     feedbackView.setVisibility(View.VISIBLE);
                     balasan.setText(inputText);
                     Log.d("Feedback", inputText);
@@ -129,7 +131,7 @@ public class ViewBeritaActivity extends AppCompatActivity {
                     submitDialogBtn.setEnabled(false);
                     cancelDialogBtn.setEnabled(false);
                     feedbackDialogEditText.setText("");
-                    insertUserFeedback(berita.getId(), inputText);
+                    insertUserFeedback(String.valueOf(berita.getFeedbackId()), inputText);
                 }
             }
         });
@@ -148,20 +150,21 @@ public class ViewBeritaActivity extends AppCompatActivity {
             }
         });
 
-        if(berita.getBalasan() != null){
-            if(!berita.getBalasan().isEmpty()) {
+        if(berita.getParentFeedback() != null){
+            if(!berita.getParentFeedback().isEmpty()) {
                 feedbackView.setVisibility(View.VISIBLE);
-                balasan.setText(berita.getBalasan());
+                balasan.setText(berita.getParentFeedback());
+                feedbackBtn.setVisibility(View.GONE);
             }
         }
 
-        Log.d("Pelajaran", "Size : "+berita.getPembelajaran().size());
-        for(Pelajaran i : berita.getPembelajaran()) {
+        Log.d("Pelajaran", "Size : "+berita.getSubjects().size());
+        for(Pelajaran i : berita.getSubjects()) {
             Log.d("Pelajaran", "mapel : " + i.getMataPelajaran());
         }
 
         listPembelajaran.setLayoutManager(new LinearLayoutManager(this));
-        CatatanAdapter catatanAdapter = new CatatanAdapter(this, berita.getPembelajaran());
+        CatatanAdapter catatanAdapter = new CatatanAdapter(this, berita.getSubjects());
         listPembelajaran.setAdapter(catatanAdapter);
 
         topBar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -170,10 +173,12 @@ public class ViewBeritaActivity extends AppCompatActivity {
                 finish();
             }
         });
-        Log.d("ID", berita.getId());
-        requestReadBerita(berita.getId());
+        Log.d("ID", String.valueOf(berita.getFeedbackId()));
+        requestReadBerita(String.valueOf(berita.getFeedbackId()));
 
     }
+
+
 
     public class CatatanAdapter extends RecyclerView.Adapter<CatatanAdapter.CatatanViewHolder> {
 

@@ -43,7 +43,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
         Berita berita = listBerita.get(position);
-        if(berita.isSudahDibaca()){
+        if(berita.isRead()){
             holder.avatarLayout.setBackgroundColor(Color.parseColor("#C3C3C3"));
             holder.roundBg.setBackground(ctx.getDrawable(R.drawable.card_round_bg_gray));
             holder.infoBtn.setBackgroundColor(Color.parseColor("#C3C3C3"));
@@ -58,8 +58,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             }
         });
 
-        holder.namaSiswa.setText(berita.getNamaSiswa());
-        holder.pesanTxt.setText(berita.getCatatan());
+        holder.namaSiswa.setText(berita.getStudentName());
+        holder.pesanTxt.setText(berita.getAdditionalFeedback());
     }
 
     @Override

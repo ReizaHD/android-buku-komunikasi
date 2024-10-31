@@ -22,8 +22,11 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bintangjuara.bk.RequestBK;
 import com.bintangjuara.bk.activities.LoginActivity;
 import com.bintangjuara.bk.R;
+import com.bintangjuara.bk.adapters.StudentAdapter;
+import com.bintangjuara.bk.models.Student;
 import com.bintangjuara.bk.models.UserData;
 import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -69,21 +72,7 @@ public class ProfileFragment extends Fragment {
         Button editPassBtn = view.findViewById(R.id.edit_password_btn);
         listView = view.findViewById(R.id.list_anak);
 
-        ArrayList<String> nama = new ArrayList<>();
-        ArrayList<String> kelas = new ArrayList<>();
-        ArrayList<String> id = new ArrayList<>();
-
-        nama.add("Abqory Fusena Anarghya Setiadi");
-        kelas.add("1A");
-        id.add("1");
-
-        nama.add("Reiza Hersa Dwitama");
-        kelas.add("10 MIPA 1");
-        id.add("2");
-
-        listView.setLayoutManager(new LinearLayoutManager(getContext()));
-        AnakAdapter adapter = new AnakAdapter(getContext(), nama, kelas, id);
-        listView.setAdapter(adapter);
+        requestStudent(userData.getId());
 
         profileName = view.findViewById(R.id.profile_name);
         email = view.findViewById(R.id.email);
@@ -128,82 +117,22 @@ public class ProfileFragment extends Fragment {
 
     }
 
-    public class AnakAdapter extends RecyclerView.Adapter<AnakAdapter.AnakViewHolder>{
-
-        Context ctx;
-        ArrayList<String> nama, kelas, id;
-        float[] bottomRound = new float[]{
-                0f, 0f,        // Top-left corner radius
-                0f, 0f,        // Top-right corner radius
-                30f, 30f,      // Bottom-right corner radius (change these values)
-                30f, 30f         // Bottom-left corner radius
-        };
-        float[] topRound = new float[]{
-                30f, 30f,        // Top-left corner radius
-                30f, 30f,        // Top-right corner radius
-                0f, 0f,      // Bottom-right corner radius (change these values)
-                0f, 0f         // Bottom-left corner radius
-        };
-
-        public AnakAdapter(Context ctx, ArrayList<String> nama, ArrayList<String> kelas, ArrayList<String> id) {
-            this.ctx = ctx;
-            this.nama = nama;
-            this.kelas = kelas;
-            this.id = id;
-        }
-
-        @NonNull
-        @Override
-        public AnakViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(ctx).inflate(R.layout.list_anak,parent, false);
-            return new AnakViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull AnakViewHolder holder, int position) {
-
-            Log.d("COunt",String.valueOf(getItemCount()));
-            holder.mNama.setText(nama.get(position));
-            holder.mKelas.setText(kelas.get(position));
-            if(position == 0){
-                holder.mainLayout.setBackgroundResource(R.drawable.card_yellow_round_top);
-                Log.d("FIRST", "true");
-            }else if(position == nama.size()-1){
-                holder.mainLayout.setBackgroundResource(R.drawable.card_yellow_round_bottom);
-                Log.d("LAST", "true");
+    private void requestStudent(int id){
+        RequestBK requestBK = RequestBK.getInstance(getContext());
+        requestBK.requestStudent(id, new RequestBK.StudentListener() {
+            @Override
+            public void onResponse(ArrayList<Student> students) {
+                Log.d("Response", String.valueOf(students.size()));
+                listView.setLayoutManager(new LinearLayoutManager(getContext()));
+                StudentAdapter adapter = new StudentAdapter(getContext(),students, ProfileFragment.this);
+                listView.setAdapter(adapter);
             }
-            holder.mainLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    filterNama(id.get(holder.getAdapterPosition()));
-                }
-            });
 
-        }
-
-        @Override
-        public int getItemCount() {
-            return nama.size();
-        }
-
-
-        public class AnakViewHolder extends RecyclerView.ViewHolder{
-            TextView mNama, mKelas;
-            LinearLayout mainLayout;
-
-            public AnakViewHolder(@NonNull View itemView) {
-                super(itemView);
-                mNama = itemView.findViewById(R.id.nama_anak);
-                mKelas = itemView.findViewById(R.id.kelas_anak);
-                mainLayout = itemView.findViewById(R.id.main);
+            @Override
+            public void onError(Exception error) {
+                Log.e("ERROR", error.toString());
             }
-        }
-    }
-
-    public void filterNama(String id){
-        Bundle bundle = new Bundle();
-        bundle.putString("id", id);
-        getParentFragmentManager().setFragmentResult("filter", bundle);
+        });
     }
 
 }

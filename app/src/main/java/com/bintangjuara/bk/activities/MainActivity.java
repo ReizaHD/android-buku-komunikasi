@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
     Fragment homeFragment, notificationFragment, profileFragment;
     private ActivityResultLauncher<Intent> activityResultLauncher;
     private SharedViewModel sharedViewModel;
-    ArrayList<Berita> beritaArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,8 +154,11 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        selectedNavItem = R.id.nav_home;
         homeFragment = new HomeFragment();
+        notificationFragment = new NotificationFragment();
+        profileFragment = new ProfileFragment();
+
+        selectedNavItem = R.id.nav_home;
         homeFragment.setArguments(bundle);
 
         getSupportFragmentManager()
@@ -174,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportFragmentManager().setFragmentResultListener("filter", this, (requestKey, result) -> {
             Log.d("Fragment","Search NAMA");
-            String id = result.getString("id");
+            String id = result.getString("user_id");
             Log.d("ID", id);
             Bundle filterBundle = new Bundle();
             filterBundle.putString("id", id);
@@ -209,6 +211,7 @@ public class MainActivity extends AppCompatActivity {
                     if (homeFragment == null) {
                         homeFragment = new HomeFragment();
                         homeFragment.setArguments(bundle);
+                        Log.d("Frag", "NULL");
                     }
                     selectedFragment = homeFragment;
                 }

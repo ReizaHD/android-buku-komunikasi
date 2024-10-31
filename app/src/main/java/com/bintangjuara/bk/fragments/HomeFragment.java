@@ -24,9 +24,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bintangjuara.bk.RequestBK;
+import com.bintangjuara.bk.SharedViewModel;
 import com.bintangjuara.bk.adapters.MessageAdapter;
 import com.bintangjuara.bk.models.Berita;
 import com.bintangjuara.bk.R;
+import com.bintangjuara.bk.models.NewBerita;
 import com.bintangjuara.bk.models.Pelajaran;
 import com.bintangjuara.bk.models.UserData;
 import com.bumptech.glide.Glide;
@@ -108,8 +110,13 @@ public class HomeFragment extends Fragment {
         requestBK.requestBerita(new RequestBK.BeritaListener() {
             @Override
             public void onResponse(ArrayList<Berita> listBerita) {
+                ArrayList<Berita> readBerita = new ArrayList<>();
+                for(Berita berita : listBerita){
+                    if(!berita.isRead())
+                        readBerita.add(berita);
+                }
                 MessageAdapter adapter;
-                adapter = new MessageAdapter(getContext(), listBerita);
+                adapter = new MessageAdapter(getContext(), readBerita);
                 list.setLayoutManager(new LinearLayoutManager(getContext()));
                 list.setAdapter(adapter);
 
