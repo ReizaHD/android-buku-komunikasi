@@ -50,6 +50,7 @@ public class HomeFragment extends Fragment {
     UserData userData;
     ArrayList<Berita> arrayListBerita;
     ImageView avatar;
+    TextView emptyMsg;
 
 
     public HomeFragment() {
@@ -87,6 +88,7 @@ public class HomeFragment extends Fragment {
         pb = view.findViewById(R.id.progress_bar);
         layout = view.findViewById(R.id.home_layout);
         profileName = view.findViewById(R.id.profile);
+        emptyMsg = view.findViewById(R.id.empty_msg);
 
 
         if(userData!=null) {
@@ -110,15 +112,20 @@ public class HomeFragment extends Fragment {
         requestBK.requestBerita(new RequestBK.BeritaListener() {
             @Override
             public void onResponse(ArrayList<Berita> listBerita) {
+
                 ArrayList<Berita> readBerita = new ArrayList<>();
                 for(Berita berita : listBerita){
                     if(!berita.isRead())
                         readBerita.add(berita);
                 }
-                MessageAdapter adapter;
-                adapter = new MessageAdapter(getContext(), readBerita);
-                list.setLayoutManager(new LinearLayoutManager(getContext()));
-                list.setAdapter(adapter);
+                if(readBerita.isEmpty()){
+                    emptyMsg.setVisibility(View.VISIBLE);
+                }else {
+                    MessageAdapter adapter;
+                    adapter = new MessageAdapter(getContext(), readBerita);
+                    list.setLayoutManager(new LinearLayoutManager(getContext()));
+                    list.setAdapter(adapter);
+                }
 
                 pb.setVisibility(View.GONE);
                 layout.setVisibility(View.VISIBLE);

@@ -26,6 +26,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -155,9 +156,6 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         homeFragment = new HomeFragment();
-        notificationFragment = new NotificationFragment();
-        profileFragment = new ProfileFragment();
-
         selectedNavItem = R.id.nav_home;
         homeFragment.setArguments(bundle);
 
@@ -180,79 +178,110 @@ public class MainActivity extends AppCompatActivity {
             Log.d("ID", id);
             Bundle filterBundle = new Bundle();
             filterBundle.putString("id", id);
-            notificationFragment = new NotificationFragment();
-            notificationFragment.setArguments(filterBundle);
+            notificationFragment = replaceFragment(notificationFragment, new NotificationFragment(), filterBundle);
             bottomNavigationView.setSelectedItemId(R.id.nav_notification);
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, notificationFragment).commit();
-        });
-
-        sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
-        sharedViewModel.getData().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-
-            }
         });
 
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
-            Fragment selectedFragment = null;
             int itemId = item.getItemId();
-            Log.d("item id", itemId + " " + selectedNavItem);
 
-            if (itemId == R.id.nav_home) {
-                if (selectedNavItem == R.id.nav_home) {
-                    // Pressed twice, refresh the fragment
-                    homeFragment = new HomeFragment();
-                    homeFragment.setArguments(bundle);
-                    selectedFragment = homeFragment;
-                } else {
-                    // Use existing fragment if available
+            if (itemId == selectedNavItem) {
+                refreshFragment(itemId); // Refresh if already selected
+            } else {
+                if (itemId == R.id.nav_home) {
                     if (homeFragment == null) {
                         homeFragment = new HomeFragment();
                         homeFragment.setArguments(bundle);
-                        Log.d("Frag", "NULL");
+                        addFragment(homeFragment);
+                    } else {
+                        showFragment(homeFragment);
                     }
-                    selectedFragment = homeFragment;
-                }
-            } else if (itemId == R.id.nav_notification) {
-                if (selectedNavItem == R.id.nav_notification) {
-                    // Pressed twice, refresh the fragment
-                    notificationFragment = new NotificationFragment();
-                    notificationFragment.setArguments(bundle);
-                    selectedFragment = notificationFragment;
-                } else {
+                } else if (itemId == R.id.nav_notification) {
                     if (notificationFragment == null) {
                         notificationFragment = new NotificationFragment();
                         notificationFragment.setArguments(bundle);
+                        addFragment(notificationFragment);
+                    } else {
+                        showFragment(notificationFragment);
                     }
-                    selectedFragment = notificationFragment;
-                }
-            } else if (itemId == R.id.nav_profile) {
-                if (selectedNavItem == R.id.nav_profile) {
-                    // Pressed twice, refresh the fragment
-                    profileFragment = new ProfileFragment();
-                    profileFragment.setArguments(bundle);
-                    selectedFragment = profileFragment;
-                } else {
+                } else if (itemId == R.id.nav_profile) {
                     if (profileFragment == null) {
                         profileFragment = new ProfileFragment();
                         profileFragment.setArguments(bundle);
+                        addFragment(profileFragment);
+                    } else {
+                        showFragment(profileFragment);
                     }
-                    selectedFragment = profileFragment;
                 }
             }
-
-            selectedNavItem = itemId;
-
-            // Replace the fragment
-            if (selectedFragment != null) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
-            }
-
+            selectedNavItem = itemId; // Update last selected item
             return true;
         });
 
+    }
+
+    private void showFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        hideAllFragments(transaction)
+                .show(fragment)
+                .commit();
+    }
+
+
+    private void addFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        hideAllFragments(transaction)
+                .add(R.id.fragment_container, fragment)
+                .show(fragment)
+                .commit();
+    }
+
+    private Fragment replaceFragment (Fragment remove, Fragment add, Bundle args){
+        removeFragment(remove);
+        if(args!=null){
+            add.setArguments(args);
+        }
+        addFragment(add);
+        return add;
+    }
+
+    private void removeFragment(Fragment fragment){
+        getSupportFragmentManager().beginTransaction().remove(fragment);
+    }
+
+    private FragmentTransaction hideAllFragments(FragmentTransaction transaction) {
+        if (homeFragment != null) transaction.hide(homeFragment);
+        if (notificationFragment != null) transaction.hide(notificationFragment);
+        if (profileFragment != null) transaction.hide(profileFragment);
+        return transaction;
+    }
+
+    private void refreshFragment(int itemId) {
+        Fragment fragmentToRefresh = null;
+        String tag = "";
+        FragmentTransaction transaction =  getSupportFragmentManager().beginTransaction();
+        if (itemId == R.id.nav_home) {
+            transaction.remove(homeFragment).commit();
+            fragmentToRefresh = new HomeFragment();
+            homeFragment = fragmentToRefresh;
+            tag = "HomeFragment";
+        } else if (itemId == R.id.nav_notification) {
+            transaction.remove(notificationFragment).commit();
+            fragmentToRefresh = new NotificationFragment();
+            notificationFragment = fragmentToRefresh;
+            tag = "NotificationFragment";
+        } else if (itemId == R.id.nav_profile) {
+            transaction.remove(profileFragment).commit();
+            fragmentToRefresh = new ProfileFragment();
+            profileFragment = fragmentToRefresh;
+            tag = "ProfileFragment";
+        }
+        fragmentToRefresh.setArguments(bundle);
+        hideAllFragments(getSupportFragmentManager().beginTransaction())
+                .add(R.id.fragment_container, fragmentToRefresh, tag)
+                .show(fragmentToRefresh)
+                .commit();
     }
 
     @Override

@@ -68,13 +68,27 @@
             android:text="Pemberitahuan Baru"
             android:textSize="18sp" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/list_item"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:fadingEdgeLength="50dp"
-            android:requiresFadingEdge="vertical" />
+            android:layout_marginTop="10dp">
+            <TextView
+                android:id="@+id/empty_msg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="Belum ada pemberitahuan baru"
+                android:fontFamily="@font/poppins"
+                android:textColor="@color/gray"
+                android:textAlignment="center"
+                android:visibility="gone"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/list_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fadingEdgeLength="50dp"
+                android:requiresFadingEdge="vertical" />
+        </FrameLayout>
     </LinearLayout>
 
 </FrameLayout>
