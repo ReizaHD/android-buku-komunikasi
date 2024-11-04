@@ -27,9 +27,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bintangjuara.bk.CarouselItemDecoration;
+import com.bintangjuara.bk.utilities.CarouselItemDecoration;
 import com.bintangjuara.bk.R;
-import com.bintangjuara.bk.RequestBK;
+import com.bintangjuara.bk.services.RequestBK;
 import com.bintangjuara.bk.adapters.CarouselAdapter;
 import com.bintangjuara.bk.models.Berita;
 import com.bintangjuara.bk.models.CarouselItem;

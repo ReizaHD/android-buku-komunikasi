@@ -18,7 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.bintangjuara.bk.RequestBK;
+import com.bintangjuara.bk.services.RequestBK;
 import com.bintangjuara.bk.adapters.MessageAdapter;
 import com.bintangjuara.bk.models.Berita;
 import com.bintangjuara.bk.R;

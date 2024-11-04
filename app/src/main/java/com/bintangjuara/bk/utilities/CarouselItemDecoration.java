@@ -1,4 +1,4 @@
-package com.bintangjuara.bk;
+package com.bintangjuara.bk.utilities;
 
 import android.graphics.Rect;
 import android.view.View;

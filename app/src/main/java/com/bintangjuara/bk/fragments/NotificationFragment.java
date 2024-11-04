@@ -17,7 +17,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.bintangjuara.bk.R;
-import com.bintangjuara.bk.RequestBK;
+import com.bintangjuara.bk.services.RequestBK;
 import com.bintangjuara.bk.adapters.MessageAdapter;
 import com.bintangjuara.bk.models.Berita;
 import com.google.android.material.datepicker.MaterialDatePicker;

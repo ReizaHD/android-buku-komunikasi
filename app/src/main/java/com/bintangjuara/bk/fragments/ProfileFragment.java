@@ -2,10 +2,8 @@ package com.bintangjuara.bk.fragments;
 
 import static android.content.Context.MODE_PRIVATE;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,10 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bintangjuara.bk.RequestBK;
+import com.bintangjuara.bk.services.RequestBK;
 import com.bintangjuara.bk.activities.LoginActivity;
 import com.bintangjuara.bk.R;
 import com.bintangjuara.bk.adapters.StudentAdapter;
@@ -32,7 +29,6 @@ import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
-import java.util.zip.Inflater;
 
 public class ProfileFragment extends Fragment {
 

@@ -1,4 +1,4 @@
-package com.bintangjuara.bk;
+package com.bintangjuara.bk.services;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -11,6 +11,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
+import com.bintangjuara.bk.R;
 import com.bintangjuara.bk.activities.MainActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
