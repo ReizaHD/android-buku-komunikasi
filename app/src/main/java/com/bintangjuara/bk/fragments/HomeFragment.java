@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,28 +18,14 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.bintangjuara.bk.RequestBK;
-import com.bintangjuara.bk.SharedViewModel;
 import com.bintangjuara.bk.adapters.MessageAdapter;
 import com.bintangjuara.bk.models.Berita;
 import com.bintangjuara.bk.R;
-import com.bintangjuara.bk.models.NewBerita;
-import com.bintangjuara.bk.models.Pelajaran;
 import com.bintangjuara.bk.models.UserData;
 import com.bumptech.glide.Glide;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.Iterator;
 
 
 public class HomeFragment extends Fragment {
@@ -94,8 +81,14 @@ public class HomeFragment extends Fragment {
         if(userData!=null) {
             profileName.setText(userData.getProfile());
         }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Once data is loaded, stop the refreshing animation
+                requestBerita();
+            }
+        }, 2000);
 
-        requestBerita();
         Glide.with(this).load("http://192.168.1.13/buku_komunikasi/images/abqory.png").placeholder(R.drawable.avatar_default).error(R.drawable.avatar_default).centerCrop().into(avatar);
 //        Collections.sort(listBerita, new Comparator<Berita>() {
 //            @Override
@@ -133,7 +126,8 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onError(Exception error) {
-
+                pb.setVisibility(View.GONE);
+                layout.setVisibility(View.VISIBLE);
             }
         });
     }

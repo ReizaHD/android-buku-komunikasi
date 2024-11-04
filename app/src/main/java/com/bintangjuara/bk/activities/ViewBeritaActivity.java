@@ -1,9 +1,7 @@
 package com.bintangjuara.bk.activities;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,17 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -30,42 +23,33 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+import com.bintangjuara.bk.CarouselItemDecoration;
 import com.bintangjuara.bk.R;
 import com.bintangjuara.bk.RequestBK;
-import com.bintangjuara.bk.SharedViewModel;
-import com.bintangjuara.bk.adapters.MessageAdapter;
+import com.bintangjuara.bk.adapters.CarouselAdapter;
 import com.bintangjuara.bk.models.Berita;
+import com.bintangjuara.bk.models.CarouselItem;
 import com.bintangjuara.bk.models.Pelajaran;
 import com.google.android.material.appbar.MaterialToolbar;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.List;
 
 public class ViewBeritaActivity extends AppCompatActivity {
 
-    RecyclerView listPembelajaran;
-    TextView namaSiswa, kelas, tugasWeekend, catatan, ekstrakurikuler, catatanOrtu, balasan;
-    Button feedbackBtn;
-    LinearLayout feedbackView;
-    MaterialToolbar topBar;
-    AlertDialog alertDialog;
+    private RecyclerView listPembelajaran;
+    private TextView namaSiswa, kelas, tugasWeekend, catatan, ekstrakurikuler, catatanOrtu, balasan;
+    private Button feedbackBtn;
+    private LinearLayout feedbackView;
+    private MaterialToolbar topBar;
+    private AlertDialog alertDialog;
+    private RecyclerView carouselRecyclerView;
+    private CarouselAdapter carouselAdapter;
+    private List<CarouselItem> carouselItemList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,6 +150,40 @@ public class ViewBeritaActivity extends AppCompatActivity {
         listPembelajaran.setLayoutManager(new LinearLayoutManager(this));
         CatatanAdapter catatanAdapter = new CatatanAdapter(this, berita.getSubjects());
         listPembelajaran.setAdapter(catatanAdapter);
+
+        carouselRecyclerView = findViewById(R.id.recycler_carousel);
+        carouselItemList = new ArrayList<>();
+        carouselItemList.add(new CarouselItem("https://images.unsplash.com/photo-1692528131755-d4e366b2adf0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzNXx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60", "Slide 1"));
+        carouselItemList.add(new CarouselItem("https://images.unsplash.com/photo-1692862582645-3b6fd47b7513?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0MXx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60", "Slide 2"));
+        carouselItemList.add(new CarouselItem("https://images.unsplash.com/photo-1692584927805-d4096552a5ba?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0Nnx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60", "Slide 3"));
+        carouselItemList.add(new CarouselItem("https://images.unsplash.com/photo-1692528131755-d4e366b2adf0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzNXx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60", "Slide 1"));
+        carouselItemList.add(new CarouselItem("https://images.unsplash.com/photo-1692862582645-3b6fd47b7513?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0MXx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60", "Slide 2"));
+        carouselItemList.add(new CarouselItem("https://images.unsplash.com/photo-1692584927805-d4096552a5ba?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0Nnx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60", "Slide 3"));
+        carouselItemList.add(new CarouselItem("https://images.unsplash.com/photo-1692528131755-d4e366b2adf0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzNXx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60", "Slide 1"));
+        carouselItemList.add(new CarouselItem("https://images.unsplash.com/photo-1692862582645-3b6fd47b7513?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0MXx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60", "Slide 2"));
+        carouselItemList.add(new CarouselItem("https://images.unsplash.com/photo-1692584927805-d4096552a5ba?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0Nnx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60", "Slide 3"));
+        carouselItemList.add(new CarouselItem("https://images.unsplash.com/photo-1692528131755-d4e366b2adf0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzNXx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60", "Slide 1"));
+        carouselItemList.add(new CarouselItem("https://images.unsplash.com/photo-1692862582645-3b6fd47b7513?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0MXx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60", "Slide 2"));
+        carouselItemList.add(new CarouselItem("https://images.unsplash.com/photo-1692584927805-d4096552a5ba?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0Nnx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60", "Slide 3"));
+        carouselItemList.add(new CarouselItem("https://images.unsplash.com/photo-1692528131755-d4e366b2adf0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzNXx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60", "Slide 1"));
+        carouselItemList.add(new CarouselItem("https://images.unsplash.com/photo-1692862582645-3b6fd47b7513?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0MXx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60", "Slide 2"));
+        carouselItemList.add(new CarouselItem("https://images.unsplash.com/photo-1692584927805-d4096552a5ba?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0Nnx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60", "Slide 3"));
+        carouselItemList.add(new CarouselItem("https://images.unsplash.com/photo-1692528131755-d4e366b2adf0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzNXx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60", "Slide 1"));
+        carouselItemList.add(new CarouselItem("https://images.unsplash.com/photo-1692862582645-3b6fd47b7513?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0MXx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60", "Slide 2"));
+        carouselItemList.add(new CarouselItem("https://images.unsplash.com/photo-1692584927805-d4096552a5ba?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0Nnx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60", "Slide 3"));
+
+        carouselAdapter = new CarouselAdapter(this, carouselItemList);
+
+        // Set up the RecyclerView with horizontal layout manager
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        carouselRecyclerView.setLayoutManager(layoutManager);
+        carouselRecyclerView.setAdapter(carouselAdapter);
+
+        int spacing = 50; // Adjust this value as needed
+        carouselRecyclerView.addItemDecoration(new CarouselItemDecoration(spacing));
+
+        LinearSnapHelper snapHelper = new LinearSnapHelper();
+        snapHelper.attachToRecyclerView(carouselRecyclerView);
 
         topBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

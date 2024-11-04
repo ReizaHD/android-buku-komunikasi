@@ -1,7 +1,10 @@
 package com.bintangjuara.bk.models;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class Berita implements Serializable {
     private int feedbackId;
@@ -9,10 +12,10 @@ public class Berita implements Serializable {
     private String studentName, studentClass;
     private String weekendAssignment, additionalFeedback, extracurricular, parentFeedback;
     private boolean isRead;
-    private String date;
+    private Date date;
     private ArrayList<Pelajaran> subjects;
 
-    public Berita(int feedbackId, int studentId, String studentName, String studentClass, ArrayList<Pelajaran> subjects, String weekendAssignment, String additionalFeedback, String extracurricular, String parentFeedback, boolean isRead, String date) {
+    public Berita(int feedbackId, int studentId, String studentName, String studentClass, ArrayList<Pelajaran> subjects, String weekendAssignment, String additionalFeedback, String extracurricular, String parentFeedback, boolean isRead, Date date) {
         this.feedbackId = feedbackId;
         this.studentId = studentId;
         this.studentName = studentName;
@@ -34,8 +37,13 @@ public class Berita implements Serializable {
         return additionalFeedback;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
+    }
+
+    public String getStrDate(){
+        SimpleDateFormat outputFormat = new SimpleDateFormat("EEEE, d MMMM yyyy", new Locale("id", "ID"));
+        return outputFormat.format(date);
     }
 
     public String getExtracurricular() {

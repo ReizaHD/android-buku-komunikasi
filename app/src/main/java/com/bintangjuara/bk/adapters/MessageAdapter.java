@@ -1,5 +1,6 @@
 package com.bintangjuara.bk.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -40,13 +41,20 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         return new MessageViewHolder(view);
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
         Berita berita = listBerita.get(position);
         if(berita.isRead()){
+            Log.d(position+"", "TRUE");
             holder.avatarLayout.setBackgroundColor(Color.parseColor("#C3C3C3"));
             holder.roundBg.setBackground(ctx.getDrawable(R.drawable.card_round_bg_gray));
             holder.infoBtn.setBackgroundColor(Color.parseColor("#C3C3C3"));
+        }else{
+            Log.d(position+"", "FALSE");
+            holder.avatarLayout.setBackgroundColor(Color.parseColor("#FEC100"));
+            holder.roundBg.setBackground(ctx.getDrawable(R.drawable.card_round_bg));
+            holder.infoBtn.setBackgroundColor(Color.parseColor("#FEC100"));
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -60,6 +68,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
         holder.namaSiswa.setText(berita.getStudentName());
         holder.pesanTxt.setText(berita.getAdditionalFeedback());
+        holder.tgl.setText(berita.getStrDate());
     }
 
     @Override

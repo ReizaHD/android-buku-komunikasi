@@ -2,19 +2,15 @@ package com.bintangjuara.bk;
 
 import android.content.Context;
 import android.util.Log;
-import android.view.View;
 
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.bintangjuara.bk.adapters.MessageAdapter;
 import com.bintangjuara.bk.models.Berita;
-import com.bintangjuara.bk.models.NewBerita;
 import com.bintangjuara.bk.models.Pelajaran;
 import com.bintangjuara.bk.models.Student;
 import com.bintangjuara.bk.models.UserData;
@@ -23,9 +19,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 
 public class RequestBK {
@@ -96,6 +96,7 @@ public class RequestBK {
                 TEMP_URL + "feedback_rest.php",
                 response -> {
                     ArrayList<Berita> listBerita = new ArrayList<>();
+                    SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
                     try {
                         JSONObject responseJson = new JSONObject(response);
                         Log.d("Response", responseJson.getString("status"));
@@ -110,7 +111,7 @@ public class RequestBK {
                             String additionalFeedback = obj.getString("additional_feedback");
                             String extracurricular = obj.getString("extracurricular");
                             boolean isRead = obj.getBoolean("is_read");
-                            String date = obj.getString("date");
+                            String strDate = obj.getString("date");
                             String parentFeedback = "";
                             if(!obj.isNull("parent_feedback")){
                                 parentFeedback = obj.getString("parent_feedback");
@@ -122,9 +123,10 @@ public class RequestBK {
                                 String key = it.next();
                                 listSubject.add(new Pelajaran(key, subjects.getString(key)));
                             }
+                            Date date = inputFormat.parse(strDate);
                             listBerita.add(new Berita(feedbackId, studentId, studentName, studentClass, listSubject, weekendAssignment, additionalFeedback, extracurricular, parentFeedback, isRead, date));
                         }
-                    } catch (JSONException e) {
+                    } catch (JSONException | ParseException e) {
                         Log.e("JSON Exception", e.toString());
                     }
                     listener.onResponse(listBerita);

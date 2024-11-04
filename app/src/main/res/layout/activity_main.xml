@@ -20,17 +20,20 @@
         android:id="@+id/bottom_navigation"
         style="@style/navBarStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         app:menu="@menu/bottom_nav_menu"
         app:itemTextAppearanceActive="@font/inter"
         app:itemTextAppearanceInactive="@font/inter"
         app:itemIconTint="@color/nav_icon_color"
-        app:itemIconSize="25dp"
+        app:itemIconSize="20dp"
         app:backgroundTint="#FFFFFF"
         app:itemBackground="@android:color/transparent"
         app:itemActiveIndicatorStyle="@android:color/transparent"
         app:itemTextColor="@color/black"
-        app:labelVisibilityMode="labeled"/>
+        app:labelVisibilityMode="labeled"
+        app:itemPaddingTop="12dp"
+        app:itemPaddingBottom="12dp"
+        />
 
 </RelativeLayout>

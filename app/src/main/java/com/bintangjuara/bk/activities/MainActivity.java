@@ -10,13 +10,10 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -27,37 +24,14 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.NoConnectionError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.bintangjuara.bk.SharedViewModel;
-import com.bintangjuara.bk.WebSocketService;
 import com.bintangjuara.bk.R;
-import com.bintangjuara.bk.models.Berita;
-import com.bintangjuara.bk.models.Pelajaran;
 import com.bintangjuara.bk.models.UserData;
 import com.bintangjuara.bk.fragments.HomeFragment;
 import com.bintangjuara.bk.fragments.NotificationFragment;
 import com.bintangjuara.bk.fragments.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -67,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
     int selectedNavItem;
     Fragment homeFragment, notificationFragment, profileFragment;
     private ActivityResultLauncher<Intent> activityResultLauncher;
-    private SharedViewModel sharedViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d("ID", id);
             Bundle filterBundle = new Bundle();
             filterBundle.putString("id", id);
-            notificationFragment = replaceFragment(notificationFragment, new NotificationFragment(), filterBundle);
+            notificationFragment = replaceFragment(notificationFragment, new NotificationFragment(), "NotificationFragment", filterBundle);
             bottomNavigationView.setSelectedItemId(R.id.nav_notification);
         });
 
@@ -193,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
                     if (homeFragment == null) {
                         homeFragment = new HomeFragment();
                         homeFragment.setArguments(bundle);
-                        addFragment(homeFragment);
+                        addFragment(homeFragment, "HomeFragment");
                     } else {
                         showFragment(homeFragment);
                     }
@@ -201,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
                     if (notificationFragment == null) {
                         notificationFragment = new NotificationFragment();
                         notificationFragment.setArguments(bundle);
-                        addFragment(notificationFragment);
+                        addFragment(notificationFragment, "NotificationFragment");
                     } else {
                         showFragment(notificationFragment);
                     }
@@ -209,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
                     if (profileFragment == null) {
                         profileFragment = new ProfileFragment();
                         profileFragment.setArguments(bundle);
-                        addFragment(profileFragment);
+                        addFragment(profileFragment,"ProfileFragment");
                     } else {
                         showFragment(profileFragment);
                     }
@@ -229,20 +202,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void addFragment(Fragment fragment) {
+    private void addFragment(Fragment fragment,String tag) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         hideAllFragments(transaction)
-                .add(R.id.fragment_container, fragment)
+                .add(R.id.fragment_container, fragment, tag)
                 .show(fragment)
                 .commit();
     }
 
-    private Fragment replaceFragment (Fragment remove, Fragment add, Bundle args){
-        removeFragment(remove);
+    private Fragment replaceFragment (Fragment remove, Fragment add, String tag, Bundle args){
+        if(getSupportFragmentManager().findFragmentByTag(tag) != null) {
+            removeFragment(remove);
+        }
         if(args!=null){
             add.setArguments(args);
         }
-        addFragment(add);
+        addFragment(add, tag);
         return add;
     }
 
