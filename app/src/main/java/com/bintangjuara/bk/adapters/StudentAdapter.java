@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bintangjuara.bk.R;
@@ -21,9 +22,9 @@ import java.util.ArrayList;
 public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentViewHolder> {
     private Context ctx;
     private ArrayList<Student> students;
-    private ProfileFragment fragment;
+    private Fragment fragment;
 
-    public StudentAdapter(Context ctx, ArrayList<Student> students, ProfileFragment fragment) {
+    public StudentAdapter(Context ctx, ArrayList<Student> students, Fragment fragment) {
         this.ctx = ctx;
         this.students = students;
         this.fragment = fragment;
@@ -45,13 +46,13 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
 
         int id = student.getId();
 
-        if(position == 0){
-            holder.mainLayout.setBackgroundResource(R.drawable.card_yellow_round_top);
-            Log.d("FIRST", "true");
-        }else if(position == getItemCount()-1){
-            holder.mainLayout.setBackgroundResource(R.drawable.card_yellow_round_bottom);
-            Log.d("LAST", "true");
-        }
+//        if(position == 0){
+//            holder.mainLayout.setBackgroundResource(R.drawable.card_yellow_round_top);
+//            Log.d("FIRST", "true");
+//        }else if(position == getItemCount()-1){
+//            holder.mainLayout.setBackgroundResource(R.drawable.card_yellow_round_bottom);
+//            Log.d("LAST", "true");
+//        }
 
         holder.mainLayout.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -141,7 +141,7 @@ public class LoginActivity extends AppCompatActivity {
 
         RequestBK requestBK = RequestBK.getInstance(this);
         requestBK.requestUser(
-                body,
+                emailTxt, passTxt,
                 new RequestBK.UserListener() {
                     @Override
                     public void onResponse(UserData userData) {

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.ProfileFragment"
-
+    android:background="@color/white"
     >
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -25,14 +25,15 @@
                 android:src="@drawable/avatar_default"
                 android:layout_gravity="center_horizontal"/>
             <LinearLayout
-                android:layout_width="300dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/card_yellow_round"
                 android:layout_gravity="center_horizontal"
                 android:orientation="vertical"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="15dp"
-                android:layout_marginTop="30dp">
+                android:layout_marginTop="30dp"
+                android:layout_marginHorizontal="@dimen/horizontal_margin">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -77,35 +78,180 @@
                     android:text="Nyalakan Notifikasi"
                     android:fontFamily="@font/inter"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/logout_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="LOGOUT"
+                android:layout_gravity="center_horizontal"
+                />
             <LinearLayout
-                android:layout_width="300dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
+                android:layout_marginHorizontal="@dimen/horizontal_margin"
+                android:paddingVertical="10dp"
+                android:paddingHorizontal="15dp"
                 android:layout_gravity="center_horizontal"
+                android:orientation="vertical"
+                android:background="@drawable/card_yellow_round"
                 >
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/list_anak"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Kata Sandi Saat Ini"
+                    android:textSize="18dp"
+                    android:textColor="#A2A2A7"
+                    android:fontFamily="@font/poppins"/>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
-                    android:scrollbars="none"
-                    />
 
+                    >
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_password" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="right">
+
+                        <EditText
+                            android:id="@+id/current_password"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:inputType="textPassword"
+                            android:layout_marginLeft="5dp"
+                            android:layout_toLeftOf="@+id/ic_show_current_password"
+                            android:textColor="@color/black"
+                            android:textCursorDrawable="@drawable/cursor_color"
+                            android:background="@android:color/transparent"/>
+                        <ImageView
+                            android:id="@+id/ic_show_current_password"
+                            android:layout_width="25dp"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginHorizontal="3dp"
+                            android:src="@drawable/ic_show_password"/>
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/line" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Kata Sandi Baru"
+                    android:textSize="18dp"
+                    android:textColor="#A2A2A7"
+                    android:fontFamily="@font/poppins"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    >
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_password" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="right">
+
+                        <EditText
+                            android:id="@+id/new_password"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:inputType="textPassword"
+                            android:layout_marginLeft="5dp"
+                            android:layout_toLeftOf="@+id/ic_show_new_password"
+                            android:textColor="@color/black"
+                            android:textCursorDrawable="@drawable/cursor_color"
+                            android:background="@android:color/transparent"/>
+                        <ImageView
+                            android:id="@+id/ic_show_new_password"
+                            android:layout_width="25dp"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginHorizontal="3dp"
+                            android:src="@drawable/ic_show_password"/>
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/line" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Konfirmasi Kata Sandi Baru"
+                    android:textSize="18dp"
+                    android:textColor="#A2A2A7"
+                    android:fontFamily="@font/poppins"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    >
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_password" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="right">
+
+                        <EditText
+                            android:id="@+id/confirm_password"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:inputType="textPassword"
+                            android:layout_marginLeft="5dp"
+                            android:layout_toLeftOf="@+id/ic_show_confirm_password"
+                            android:textColor="@color/black"
+                            android:textCursorDrawable="@drawable/cursor_color"
+                            android:background="@android:color/transparent"/>
+                        <ImageView
+                            android:id="@+id/ic_show_confirm_password"
+                            android:layout_width="25dp"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginHorizontal="3dp"
+                            android:src="@drawable/ic_show_password"/>
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/line" />
             </LinearLayout>
 
             <Button
                 android:id="@+id/edit_password_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:text="UBAH PASSWORD"
-                android:layout_gravity="center_horizontal"
-                />
-            <Button
-                android:id="@+id/logout_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="LOGOUT"
+                android:layout_marginTop="15dp"
+                android:text="UBAH KATA SANDI"
                 android:layout_gravity="center_horizontal"
                 />
         </LinearLayout>

@@ -30,7 +30,8 @@
             android:exported="false" />
         <activity
             android:name=".activities.MainActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustUnspecified"/>
         <activity
             android:name=".activities.SplashActivity"
             android:exported="true">

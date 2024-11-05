@@ -36,6 +36,9 @@ public class RequestBK {
 
     private static final String BASE_URL = "https://siakad.bintangjuara.sch.id/rest_mobile/";
     private static final String TEMP_URL = "http://192.168.1.13/buku_komunikasi/school/";
+    private static final Map<String, String> HEADER = new HashMap<String, String>(){{
+        put("X-API-KEY", "sso-ikitas_1993smb11");
+    }};
 
 
     private RequestBK(Context context){
@@ -56,7 +59,10 @@ public class RequestBK {
         return requestQueue;
     }
 
-    public void requestUser(Map<String, String> body, UserListener listener){
+    public void requestUser(String email, String password, UserListener listener){
+        Map<String, String> body = new HashMap<>();
+        body.put("email", email);
+        body.put("password", password);
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
                 BASE_URL + "rest_user",
@@ -82,9 +88,36 @@ public class RequestBK {
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> headers = new HashMap<>();
-                headers.put("X-API-KEY", "sso-ikitas_1993smb11");
-                return headers;
+                return HEADER;
+            }
+        };
+        getRequestQueue().add(stringRequest);
+    }
+
+    public  void userEditPassword(String username, String userId, String currentPass, String newPass, String confirmPass, ResponseListener listener){
+        Map<String, String> body = new HashMap();
+        body.put("password", currentPass);
+        body.put("password1", newPass);
+        body.put("password2", confirmPass);
+        body.put("username", username);
+        body.put("id", userId);
+        StringRequest stringRequest = new StringRequest(
+                Request.Method.POST,
+                BASE_URL + "rest_user/password",
+                listener::onResponse,
+                listener::onError
+        ){
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return body;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> header = new HashMap<>();
+                header.put("X-API-KEY", "sso-ikitas_1993smb11");
+                return header;
             }
         };
         getRequestQueue().add(stringRequest);

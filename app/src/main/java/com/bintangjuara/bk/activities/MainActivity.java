@@ -26,6 +26,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.bintangjuara.bk.R;
+import com.bintangjuara.bk.fragments.AnakFragment;
 import com.bintangjuara.bk.models.UserData;
 import com.bintangjuara.bk.fragments.HomeFragment;
 import com.bintangjuara.bk.fragments.NotificationFragment;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     UserData userData;
     Bundle bundle;
     int selectedNavItem;
-    Fragment homeFragment, notificationFragment, profileFragment;
+    Fragment homeFragment, notificationFragment, profileFragment, anakFragment;
     private ActivityResultLauncher<Intent> activityResultLauncher;
 
     @Override
@@ -178,6 +179,14 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         showFragment(notificationFragment);
                     }
+                } else if(itemId == R.id.nav_students){
+                    if (anakFragment == null) {
+                        anakFragment = new AnakFragment();
+                        anakFragment.setArguments(bundle);
+                        addFragment(anakFragment,"AnakFragment");
+                    } else {
+                        showFragment(anakFragment);
+                    }
                 } else if (itemId == R.id.nav_profile) {
                     if (profileFragment == null) {
                         profileFragment = new ProfileFragment();
@@ -229,6 +238,7 @@ public class MainActivity extends AppCompatActivity {
         if (homeFragment != null) transaction.hide(homeFragment);
         if (notificationFragment != null) transaction.hide(notificationFragment);
         if (profileFragment != null) transaction.hide(profileFragment);
+        if (anakFragment != null) transaction.hide(anakFragment);
         return transaction;
     }
 
@@ -246,6 +256,11 @@ public class MainActivity extends AppCompatActivity {
             fragmentToRefresh = new NotificationFragment();
             notificationFragment = fragmentToRefresh;
             tag = "NotificationFragment";
+        } else if (itemId == R.id.nav_students){
+            transaction.remove(anakFragment).commit();
+            fragmentToRefresh = new AnakFragment();
+            anakFragment = fragmentToRefresh;
+            tag = "ProfileFragment";
         } else if (itemId == R.id.nav_profile) {
             transaction.remove(profileFragment).commit();
             fragmentToRefresh = new ProfileFragment();
