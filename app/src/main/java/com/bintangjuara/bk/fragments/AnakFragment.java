@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.bintangjuara.bk.R;
 import com.bintangjuara.bk.adapters.StudentAdapter;
@@ -26,6 +27,7 @@ public class AnakFragment extends Fragment {
 
     RecyclerView recyclerView;
     UserData userData;
+    ProgressBar pb;
 
     public AnakFragment() {
         // Required empty public constructor
@@ -51,6 +53,7 @@ public class AnakFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.list_anak);
+        pb = view.findViewById(R.id.progress_bar);
         if(userData!=null)requestStudent(userData.getId());
 
     }
@@ -66,11 +69,20 @@ public class AnakFragment extends Fragment {
                 int spaceHeight = 16; // Change this value to set the desired space (in pixels)
                 recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(spaceHeight));
                 recyclerView.setAdapter(adapter);
+                pb.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
             }
 
             @Override
-            public void onError(Exception error) {
+            public void onError(Exception error, ArrayList<Student> students) {
                 Log.e("ERROR", error.toString());
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                StudentAdapter adapter = new StudentAdapter(getContext(),students, AnakFragment.this);
+                int spaceHeight = 16; // Change this value to set the desired space (in pixels)
+                recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(spaceHeight));
+                recyclerView.setAdapter(adapter);
+                pb.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
             }
         });
     }

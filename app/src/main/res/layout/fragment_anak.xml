@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.AnakFragment">
-
+    tools:context=".fragments.AnakFragment"
+    android:paddingHorizontal="30dp"
+    android:paddingTop="30dp">
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:layout_gravity="center"
+        android:visibility="visible"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_anak"
         android:nestedScrollingEnabled="false"
         android:scrollbars="none"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginHorizontal="@dimen/horizontal_margin"
-        android:layout_marginTop="30dp"/>
+        android:visibility="gone"/>
 
-</LinearLayout>
+</FrameLayout>

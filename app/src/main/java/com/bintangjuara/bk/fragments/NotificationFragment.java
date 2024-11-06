@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.bintangjuara.bk.R;
@@ -37,8 +38,7 @@ public class NotificationFragment extends Fragment {
     SwipeRefreshLayout refreshLayout;
     String idFilter;
     ArrayList<Berita> beritaArrayList;
-
-
+    LinearLayout mainLayout;
 
     public NotificationFragment() {
         // Required empty public constructor
@@ -72,6 +72,7 @@ public class NotificationFragment extends Fragment {
         pb = view.findViewById(R.id.progress_bar);
         searchBar = view.findViewById(R.id.search_bar);
         refreshLayout = view.findViewById(R.id.refresh);
+        mainLayout = view.findViewById(R.id.main);
 
         requestBerita();
 
@@ -150,11 +151,30 @@ public class NotificationFragment extends Fragment {
 
                 pb.setVisibility(View.GONE);
                 refreshLayout.setRefreshing(false);
+                mainLayout.setVisibility(View.VISIBLE);
             }
 
             @Override
-            public void onError(Exception error) {
+            public void onError(Exception error, ArrayList<Berita> listBerita) {
+                if(idFilter!=null){
+                    ArrayList<Berita> filteredBerita = new ArrayList<>();
+                    for(Berita berita:listBerita){
+                        Log.d("DATE", berita.getDate().toString());
+                        if(berita.getStudentId()==Integer.parseInt(idFilter)){
+                            filteredBerita.add(berita);
+                        }
+                    }
+                    listBerita = filteredBerita;
+                }
+                beritaArrayList = listBerita;
+                MessageAdapter adapter;
+                adapter = new MessageAdapter(getContext(), listBerita);
+                list.setLayoutManager(new LinearLayoutManager(getContext()));
+                list.setAdapter(adapter);
+
+                pb.setVisibility(View.GONE);
                 refreshLayout.setRefreshing(false);
+                mainLayout.setVisibility(View.VISIBLE);
             }
         });
     }

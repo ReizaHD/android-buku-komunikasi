@@ -125,7 +125,21 @@ public class HomeFragment extends Fragment {
             }
 
             @Override
-            public void onError(Exception error) {
+            public void onError(Exception error, ArrayList<Berita> listBerita) {
+                ArrayList<Berita> readBerita = new ArrayList<>();
+                for(Berita berita : listBerita){
+                    if(!berita.isRead())
+                        readBerita.add(berita);
+                }
+                if(readBerita.isEmpty()){
+                    emptyMsg.setVisibility(View.VISIBLE);
+                }else {
+                    MessageAdapter adapter;
+                    adapter = new MessageAdapter(getContext(), readBerita);
+                    list.setLayoutManager(new LinearLayoutManager(getContext()));
+                    list.setAdapter(adapter);
+                }
+
                 pb.setVisibility(View.GONE);
                 layout.setVisibility(View.VISIBLE);
             }

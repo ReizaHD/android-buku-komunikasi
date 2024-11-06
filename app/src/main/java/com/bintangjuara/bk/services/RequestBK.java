@@ -12,6 +12,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bintangjuara.bk.models.Berita;
 import com.bintangjuara.bk.models.Pelajaran;
+import com.bintangjuara.bk.models.StaticData;
 import com.bintangjuara.bk.models.Student;
 import com.bintangjuara.bk.models.UserData;
 
@@ -164,7 +165,43 @@ public class RequestBK {
                     }
                     listener.onResponse(listBerita);
                 },
-                listener::onError
+                error -> {
+                    ArrayList<Berita> listBerita = new ArrayList<>();
+                    SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                    try {
+                        JSONObject responseJson = new JSONObject(StaticData.getFeedback());
+                        Log.d("Response", responseJson.getString("status"));
+                        JSONArray jsonArray = responseJson.getJSONArray("data");
+                        for(int i=0;i<jsonArray.length();i++){
+                            JSONObject obj = jsonArray.getJSONObject(i);
+                            int feedbackId = obj.getInt("feedback_id");
+                            int studentId = obj.getInt("student_id");
+                            String studentName = obj.getString("student_name");
+                            String studentClass = obj.getString("student_class");
+                            String weekendAssignment = obj.getString("weekend_assignment");
+                            String additionalFeedback = obj.getString("additional_feedback");
+                            String extracurricular = obj.getString("extracurricular");
+                            boolean isRead = obj.getBoolean("is_read");
+                            String strDate = obj.getString("date");
+                            String parentFeedback = "";
+                            if(!obj.isNull("parent_feedback")){
+                                parentFeedback = obj.getString("parent_feedback");
+                            }
+                            JSONObject subjects = obj.getJSONObject("subjects");
+
+                            ArrayList<Pelajaran> listSubject = new ArrayList<>();
+                            for (Iterator<String> it = subjects.keys(); it.hasNext(); ) {
+                                String key = it.next();
+                                listSubject.add(new Pelajaran(key, subjects.getString(key)));
+                            }
+                            Date date = inputFormat.parse(strDate);
+                            listBerita.add(new Berita(feedbackId, studentId, studentName, studentClass, listSubject, weekendAssignment, additionalFeedback, extracurricular, parentFeedback, isRead, date));
+                        }
+                    } catch (JSONException | ParseException e) {
+                        Log.e("JSON Exception", e.toString());
+                    }
+                    listener.onError(error, listBerita);
+                }
         );
         getRequestQueue().add(stringRequest);
     }
@@ -226,7 +263,22 @@ public class RequestBK {
                     }
                     listener.onResponse(students);
                 },
-                listener::onError
+                error -> {
+                    ArrayList<Student> students = new ArrayList<>();
+                    try {
+                        JSONArray jsonArray = new JSONArray(StaticData.getStudent());
+                        for(int i=0; i < jsonArray.length(); i++){
+                            JSONObject obj = jsonArray.getJSONObject(i);
+                            int id = obj.getInt("id");
+                            String name = obj.getString("name");
+                            String className = obj.getString("class");
+                            students.add(new Student(id, name, className));
+                        }
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                    listener.onError(error, students);
+                }
         ){
             @Nullable
             @Override
@@ -251,11 +303,11 @@ public class RequestBK {
 
     public interface BeritaListener{
         void onResponse(ArrayList<Berita> listBerita);
-        void onError(Exception error);
+        void onError(Exception error, ArrayList<Berita> listBerita);
     }
 
     public interface StudentListener{
         void onResponse(ArrayList<Student> students);
-        void onError(Exception error);
+        void onError(Exception error, ArrayList<Student> students);
     }
 }
