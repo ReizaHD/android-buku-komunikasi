@@ -19,6 +19,7 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Carous
 
     private Context context;
     private List<CarouselItem> carouselItems;
+    private OnItemClickListener onItemClickListener;
 
     public CarouselAdapter(Context context, List<CarouselItem> carouselItems) {
         this.context = context;
@@ -35,9 +36,16 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Carous
     @Override
     public void onBindViewHolder(@NonNull CarouselViewHolder holder, int position) {
         CarouselItem item = carouselItems.get(position);
-        Glide.with(context).load(carouselItems.get(position).getImageUrl()).into(holder.itemImage);
+        String urlImage = carouselItems.get(position).getImageUrl();
+        Glide.with(context).load(urlImage).into(holder.itemImage);
 //        holder.itemImage.setImageResource(item.getImageResource());
         holder.itemText.setText(item.getText());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onItemClickListener.onClick(holder.itemImage, item);
+            }
+        });
     }
 
     @Override
@@ -54,6 +62,14 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.Carous
             itemImage = itemView.findViewById(R.id.itemImage);
             itemText = itemView.findViewById(R.id.itemText);
         }
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public interface OnItemClickListener {
+        void onClick(ImageView imageView, CarouselItem item);
     }
 }
 

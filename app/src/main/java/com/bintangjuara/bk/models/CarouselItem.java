@@ -1,6 +1,8 @@
 package com.bintangjuara.bk.models;
 
-public class CarouselItem {
+import java.io.Serializable;
+
+public class CarouselItem implements Serializable {
     private int imageResource;
     private String text, imageUrl;
 

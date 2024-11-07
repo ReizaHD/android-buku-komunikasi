@@ -48,4 +48,21 @@
         <item name="titleTextAppearance">@style/topBarTitleLarge</item>
         <item name="subtitleTextAppearance">@style/topBarTitleMedium</item>
     </style>
+    <!--Date Picker Styles-->
+    <style name="headerLayout" parent="Widget.Material3.MaterialCalendar.HeaderLayout">
+        <item name="android:background">@color/yellow</item>
+    </style>
+    <style name="calendarStyle" parent="Widget.Material3.MaterialCalendar">
+        <item name="backgroundTint">#FFFFFF</item>
+
+        <item name="rangeFillColor">?attr/colorPrimaryInverse</item>
+    </style>
+    <style name="DateRangePickerDialogTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="materialCalendarHeaderLayout">@style/headerLayout</item>
+        <item name="materialCalendarStyle">@style/calendarStyle</item>
+        <item name="colorOnSurface">@color/black</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryInverse">@color/yellow_light</item>
+        <item name="colorPrimary">@color/yellow</item>
+    </style>
 </resources>

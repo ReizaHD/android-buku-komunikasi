@@ -1,9 +1,11 @@
 package com.bintangjuara.bk.fragments;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +23,8 @@ import com.bintangjuara.bk.R;
 import com.bintangjuara.bk.services.RequestBK;
 import com.bintangjuara.bk.adapters.MessageAdapter;
 import com.bintangjuara.bk.models.Berita;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 
@@ -76,10 +80,37 @@ public class NotificationFragment extends Fragment {
 
         requestBerita();
 
-        MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
-        builder.setTitleText("Select date")
-                .setSelection(MaterialDatePicker.todayInUtcMilliseconds());
-        MaterialDatePicker<Long> datePicker = builder.build();
+//        MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
+//        builder.setTitleText("Select date")
+//                .setSelection(MaterialDatePicker.todayInUtcMilliseconds());
+//        MaterialDatePicker<Long> datePicker = builder.build();
+
+        // Set the app's locale to Indonesian
+        Locale locale = new Locale("id", "ID");
+        Locale.setDefault(locale);
+        Configuration config = getResources().getConfiguration();
+        config.setLocale(locale);
+        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+
+        MaterialDatePicker.Builder<Pair<Long, Long>> builder = MaterialDatePicker.Builder.dateRangePicker();
+
+        builder.setTitleText("Select date");
+
+        Calendar endCalendar = Calendar.getInstance();
+        long endDate = endCalendar.getTimeInMillis();
+        endCalendar.add(Calendar.DAY_OF_YEAR, -7);
+        long startDate = endCalendar.getTimeInMillis();
+        endCalendar.set(2024, 8, 1, 0,0,0);
+        long startMonth = endCalendar.getTimeInMillis();
+        builder.setSelection(new Pair<>(startDate, endDate));
+
+        CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder()
+                .setValidator(DateValidatorPointBackward.now());
+        constraintsBuilder.setStart(startMonth);
+        constraintsBuilder.setEnd(MaterialDatePicker.thisMonthInUtcMilliseconds());
+        builder.setCalendarConstraints(constraintsBuilder.build());
+        builder.setTheme(R.style.DateRangePickerDialogTheme);
+        MaterialDatePicker<Pair<Long, Long>> datePicker = builder.build();
 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -96,22 +127,29 @@ public class NotificationFragment extends Fragment {
             }
         });
 
-        datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
+        datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Pair<Long, Long>>() {
             @Override
-            public void onPositiveButtonClick(Long selection) {
-                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("id", "ID"));
-                String formattedDate = sdf.format(new Date(selection));
+            public void onPositiveButtonClick(Pair<Long, Long> selection) {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd MMM", new Locale("id", "ID"));
                 Calendar calendar = Calendar.getInstance();
-                calendar.setTime(new Date(selection));
+
+                calendar.setTime(new Date(selection.first));
                 calendar.set(Calendar.HOUR_OF_DAY, 0);
                 calendar.set(Calendar.MINUTE, 0);
                 calendar.set(Calendar.SECOND, 0);
                 calendar.set(Calendar.MILLISECOND, 0);
-                Date selectedDate = calendar.getTime();
-                Log.d("DATE", selectedDate.toString());
+                Date dateStart = calendar.getTime();
+
+                calendar.setTime(new Date(selection.second));
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+                Date dateEnd = calendar.getTime();
                 ArrayList<Berita> filteredBerita = new ArrayList<>();
                 for(Berita berita : beritaArrayList){
-                    if(berita.getDate().equals(selectedDate)){
+                    Date dateBerita = berita.getDate();
+                    if(!dateBerita.before(dateStart) && !dateBerita.after(dateEnd)){
                         filteredBerita.add(berita);
                     }
                 }
@@ -119,9 +157,37 @@ public class NotificationFragment extends Fragment {
                 adapter = new MessageAdapter(getContext(), filteredBerita);
                 list.setLayoutManager(new LinearLayoutManager(getContext()));
                 list.setAdapter(adapter);
+                String formattedDate = sdf.format(dateStart) + " - "+ sdf.format(dateEnd);
                 searchBar.setText(formattedDate);
             }
         });
+
+//        datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
+//            @Override
+//            public void onPositiveButtonClick(Long selection) {
+//                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("id", "ID"));
+//                String formattedDate = sdf.format(new Date(selection));
+//                Calendar calendar = Calendar.getInstance();
+//                calendar.setTime(new Date(selection));
+//                calendar.set(Calendar.HOUR_OF_DAY, 0);
+//                calendar.set(Calendar.MINUTE, 0);
+//                calendar.set(Calendar.SECOND, 0);
+//                calendar.set(Calendar.MILLISECOND, 0);
+//                Date selectedDate = calendar.getTime();
+//                Log.d("DATE", selectedDate.toString());
+//                ArrayList<Berita> filteredBerita = new ArrayList<>();
+//                for(Berita berita : beritaArrayList){
+//                    if(berita.getDate().equals(selectedDate)){
+//                        filteredBerita.add(berita);
+//                    }
+//                }
+//                MessageAdapter adapter;
+//                adapter = new MessageAdapter(getContext(), filteredBerita);
+//                list.setLayoutManager(new LinearLayoutManager(getContext()));
+//                list.setAdapter(adapter);
+//                searchBar.setText(formattedDate);
+//            }
+//        });
 
 
     }

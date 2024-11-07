@@ -36,7 +36,7 @@ public class RequestBK {
     private RequestQueue requestQueue;
 
     private static final String BASE_URL = "https://siakad.bintangjuara.sch.id/rest_mobile/";
-    private static final String TEMP_URL = "http://192.168.1.13/buku_komunikasi/school/";
+    private static final String TEMP_URL = "http://192.168.1.15/buku_komunikasi/school/";
     private static final Map<String, String> HEADER = new HashMap<String, String>(){{
         put("X-API-KEY", "sso-ikitas_1993smb11");
     }};
