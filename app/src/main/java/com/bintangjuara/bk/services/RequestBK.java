@@ -6,12 +6,13 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bintangjuara.bk.models.Berita;
-import com.bintangjuara.bk.models.Pelajaran;
+import com.bintangjuara.bk.models.Subject;
 import com.bintangjuara.bk.models.StaticData;
 import com.bintangjuara.bk.models.Student;
 import com.bintangjuara.bk.models.UserData;
@@ -36,10 +37,11 @@ public class RequestBK {
     private RequestQueue requestQueue;
 
     private static final String BASE_URL = "https://siakad.bintangjuara.sch.id/rest_mobile/";
-    private static final String TEMP_URL = "http://192.168.1.15/buku_komunikasi/school/";
+    private static final String TEMP_URL = "http://192.168.1.6/buku_komunikasi/school/";
     private static final Map<String, String> HEADER = new HashMap<String, String>(){{
         put("X-API-KEY", "sso-ikitas_1993smb11");
     }};
+
 
 
     private RequestBK(Context context){
@@ -121,6 +123,11 @@ public class RequestBK {
                 return header;
             }
         };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                800,  // Timeout in milliseconds
+                1,      // Maximum retries
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT  // Backoff multiplier
+        ));
         getRequestQueue().add(stringRequest);
     }
 
@@ -152,10 +159,10 @@ public class RequestBK {
                             }
                             JSONObject subjects = obj.getJSONObject("subjects");
 
-                            ArrayList<Pelajaran> listSubject = new ArrayList<>();
+                            ArrayList<Subject> listSubject = new ArrayList<>();
                             for (Iterator<String> it = subjects.keys(); it.hasNext(); ) {
                                 String key = it.next();
-                                listSubject.add(new Pelajaran(key, subjects.getString(key)));
+                                listSubject.add(new Subject(key, subjects.getString(key)));
                             }
                             Date date = inputFormat.parse(strDate);
                             listBerita.add(new Berita(feedbackId, studentId, studentName, studentClass, listSubject, weekendAssignment, additionalFeedback, extracurricular, parentFeedback, isRead, date));
@@ -189,10 +196,10 @@ public class RequestBK {
                             }
                             JSONObject subjects = obj.getJSONObject("subjects");
 
-                            ArrayList<Pelajaran> listSubject = new ArrayList<>();
+                            ArrayList<Subject> listSubject = new ArrayList<>();
                             for (Iterator<String> it = subjects.keys(); it.hasNext(); ) {
                                 String key = it.next();
-                                listSubject.add(new Pelajaran(key, subjects.getString(key)));
+                                listSubject.add(new Subject(key, subjects.getString(key)));
                             }
                             Date date = inputFormat.parse(strDate);
                             listBerita.add(new Berita(feedbackId, studentId, studentName, studentClass, listSubject, weekendAssignment, additionalFeedback, extracurricular, parentFeedback, isRead, date));
@@ -203,6 +210,11 @@ public class RequestBK {
                     listener.onError(error, listBerita);
                 }
         );
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                800,  // Timeout in milliseconds
+                1,      // Maximum retries
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT  // Backoff multiplier
+        ));
         getRequestQueue().add(stringRequest);
     }
 
@@ -288,6 +300,11 @@ public class RequestBK {
                 return body;
             }
         };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                800,  // Timeout in milliseconds
+                1,      // Maximum retries
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT  // Backoff multiplier
+        ));
         getRequestQueue().add(stringRequest);
     }
 

@@ -3,5 +3,7 @@
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">192.168.1.13</domain> <!-- This wildcard allows all domains -->
         <domain includeSubdomains="true">192.168.1.15</domain> <!-- This wildcard allows all domains -->
+        <domain includeSubdomains="true">192.168.1.17</domain> <!-- This wildcard allows all domains -->
+        <domain includeSubdomains="true">192.168.1.6</domain> <!-- This wildcard allows all domains -->
     </domain-config>
 </network-security-config>

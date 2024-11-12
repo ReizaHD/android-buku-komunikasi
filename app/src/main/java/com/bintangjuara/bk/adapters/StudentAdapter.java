@@ -42,7 +42,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
         Log.d("COunt",String.valueOf(getItemCount()));
         Student student = students.get(position);
         holder.mNama.setText(student.getName());
-        holder.mKelas.setText(student.getClassName());
+        holder.mKelas.setText("Kelas: "+student.getClassName());
 
         int id = student.getId();
 

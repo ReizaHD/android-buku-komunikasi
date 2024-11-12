@@ -1,8 +1,10 @@
 package com.bintangjuara.bk.fragments;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
@@ -20,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.bintangjuara.bk.R;
+import com.bintangjuara.bk.activities.ViewBeritaActivity;
 import com.bintangjuara.bk.services.RequestBK;
 import com.bintangjuara.bk.adapters.MessageAdapter;
 import com.bintangjuara.bk.models.Berita;
@@ -34,7 +37,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class NotificationFragment extends Fragment {
+public class HistoryFragment extends Fragment {
 
     RecyclerView list;
     ProgressBar pb;
@@ -43,8 +46,9 @@ public class NotificationFragment extends Fragment {
     String idFilter;
     ArrayList<Berita> beritaArrayList;
     LinearLayout mainLayout;
+    ActivityResultLauncher<Intent> resultLauncher;
 
-    public NotificationFragment() {
+    public HistoryFragment() {
         // Required empty public constructor
     }
 
@@ -52,7 +56,7 @@ public class NotificationFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null){
-            idFilter = getArguments().getString("id");
+            idFilter = getArguments().getString("user_id");
         }
 
     }
@@ -195,6 +199,14 @@ public class NotificationFragment extends Fragment {
 
 
     private void requestBerita(){
+        MessageAdapter.OnClickListener onClickListener = new MessageAdapter.OnClickListener() {
+            @Override
+            public void onClick(Berita berita) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("berita",berita);
+                getParentFragmentManager().setFragmentResult("view_berita", bundle);
+            }
+        };
         RequestBK requestBK = RequestBK.getInstance(getContext());
         requestBK.requestBerita(new RequestBK.BeritaListener() {
             @Override
@@ -212,6 +224,7 @@ public class NotificationFragment extends Fragment {
                 beritaArrayList = listBerita;
                 MessageAdapter adapter;
                 adapter = new MessageAdapter(getContext(), listBerita);
+                adapter.setOnClickListener(onClickListener);
                 list.setLayoutManager(new LinearLayoutManager(getContext()));
                 list.setAdapter(adapter);
 
@@ -235,6 +248,7 @@ public class NotificationFragment extends Fragment {
                 beritaArrayList = listBerita;
                 MessageAdapter adapter;
                 adapter = new MessageAdapter(getContext(), listBerita);
+                adapter.setOnClickListener(onClickListener);
                 list.setLayoutManager(new LinearLayoutManager(getContext()));
                 list.setAdapter(adapter);
 

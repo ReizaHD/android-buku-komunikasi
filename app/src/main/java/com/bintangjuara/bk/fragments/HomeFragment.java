@@ -1,7 +1,12 @@
 package com.bintangjuara.bk.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -18,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bintangjuara.bk.activities.ViewBeritaActivity;
 import com.bintangjuara.bk.services.RequestBK;
 import com.bintangjuara.bk.adapters.MessageAdapter;
 import com.bintangjuara.bk.models.Berita;
@@ -38,7 +44,7 @@ public class HomeFragment extends Fragment {
     ArrayList<Berita> arrayListBerita;
     ImageView avatar;
     TextView emptyMsg;
-
+    ActivityResultLauncher<Intent> resultLauncher;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -81,26 +87,24 @@ public class HomeFragment extends Fragment {
         if(userData!=null) {
             profileName.setText(userData.getProfile());
         }
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // Once data is loaded, stop the refreshing animation
-                requestBerita();
-            }
-        }, 2000);
+        requestBerita();
 
         Glide.with(this).load("http://192.168.1.13/buku_komunikasi/images/abqory.png").placeholder(R.drawable.avatar_default).error(R.drawable.avatar_default).centerCrop().into(avatar);
-//        Collections.sort(listBerita, new Comparator<Berita>() {
-//            @Override
-//            public int compare(Berita pemberitahuan, Berita t1) {
-//                return pemberitahuan.getTanggal().compareTo(t1.getTanggal()); // Ascending order
-//            }
-//        });
+
 
 
     }
 
     private void requestBerita(){
+        MessageAdapter.OnClickListener onClickListener = new MessageAdapter.OnClickListener() {
+            @Override
+            public void onClick(Berita berita) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("berita",berita);
+                getParentFragmentManager().setFragmentResult("view_berita", bundle);
+                Log.d("RESULT", "Refreshed");
+            }
+        };
         RequestBK requestBK = RequestBK.getInstance(getContext());
         requestBK.requestBerita(new RequestBK.BeritaListener() {
             @Override
@@ -116,6 +120,7 @@ public class HomeFragment extends Fragment {
                 }else {
                     MessageAdapter adapter;
                     adapter = new MessageAdapter(getContext(), readBerita);
+                    adapter.setOnClickListener(onClickListener);
                     list.setLayoutManager(new LinearLayoutManager(getContext()));
                     list.setAdapter(adapter);
                 }
@@ -136,6 +141,7 @@ public class HomeFragment extends Fragment {
                 }else {
                     MessageAdapter adapter;
                     adapter = new MessageAdapter(getContext(), readBerita);
+                    adapter.setOnClickListener(onClickListener);
                     list.setLayoutManager(new LinearLayoutManager(getContext()));
                     list.setAdapter(adapter);
                 }

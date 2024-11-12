@@ -13,9 +13,9 @@ public class Berita implements Serializable {
     private String weekendAssignment, additionalFeedback, extracurricular, parentFeedback;
     private boolean isRead;
     private Date date;
-    private ArrayList<Pelajaran> subjects;
+    private ArrayList<Subject> subjects;
 
-    public Berita(int feedbackId, int studentId, String studentName, String studentClass, ArrayList<Pelajaran> subjects, String weekendAssignment, String additionalFeedback, String extracurricular, String parentFeedback, boolean isRead, Date date) {
+    public Berita(int feedbackId, int studentId, String studentName, String studentClass, ArrayList<Subject> subjects, String weekendAssignment, String additionalFeedback, String extracurricular, String parentFeedback, boolean isRead, Date date) {
         this.feedbackId = feedbackId;
         this.studentId = studentId;
         this.studentName = studentName;
@@ -70,7 +70,7 @@ public class Berita implements Serializable {
         return studentName;
     }
 
-    public ArrayList<Pelajaran> getSubjects() {
+    public ArrayList<Subject> getSubjects() {
         return subjects;
     }
 

@@ -28,6 +28,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     Context ctx;
     ArrayList<Berita> listBerita;
     LayoutInflater inflater;
+    OnClickListener onClickListener;
 
     public MessageAdapter(Context ctx, ArrayList<Berita> listBerita) {
         this.ctx = ctx;
@@ -60,9 +61,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ctx, ViewBeritaActivity.class);
-                intent.putExtra("berita", berita);
-                ctx.startActivity(intent);
+//                Intent intent = new Intent(ctx, ViewBeritaActivity.class);
+//                intent.putExtra("berita", berita);
+//                ctx.startActivity(intent);
+                onClickListener.onClick(berita);
             }
         });
 
@@ -92,6 +94,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             roundBg = itemView.findViewById(R.id.pemberitahuan);
             infoBtn = itemView.findViewById(R.id.info_button);
         }
+    }
+
+    public void setOnClickListener(OnClickListener onClickListener){
+        this.onClickListener = onClickListener;
+    }
+
+    public interface OnClickListener{
+        void onClick(Berita berita);
     }
 
 }

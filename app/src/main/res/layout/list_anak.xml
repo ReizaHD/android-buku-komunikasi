@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="Kelas 1A"
-                android:textSize="20dp"/>
+                android:textSize="15dp"/>
         </LinearLayout>
     </LinearLayout>
 

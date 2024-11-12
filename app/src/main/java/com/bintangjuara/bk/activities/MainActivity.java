@@ -23,24 +23,33 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.bintangjuara.bk.R;
 import com.bintangjuara.bk.fragments.AnakFragment;
+import com.bintangjuara.bk.models.Berita;
 import com.bintangjuara.bk.models.UserData;
 import com.bintangjuara.bk.fragments.HomeFragment;
-import com.bintangjuara.bk.fragments.NotificationFragment;
+import com.bintangjuara.bk.fragments.HistoryFragment;
 import com.bintangjuara.bk.fragments.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final String HOME_TAG = "HomeFragment";
+    private final String HISTORY_TAG = "HistoryFragment";
+    private final String STUDENT_TAG = "StudentFragment";
+    private final String PROFILE_TAG = "ProfileFragment";
+    private final int FRAGMENT_ID = R.id.fragment_container;
+
     SharedPreferences sharedPreferences;
     UserData userData;
     Bundle bundle;
     int selectedNavItem;
-    Fragment homeFragment, notificationFragment, profileFragment, anakFragment;
+    Fragment homeFragment, historyFragment, profileFragment, anakFragment;
     private ActivityResultLauncher<Intent> activityResultLauncher;
 
     @Override
@@ -87,8 +96,6 @@ public class MainActivity extends AppCompatActivity {
                     finish();
                 }
             });
-
-            // Show the dialog
             alertDialog.show();
         }
 
@@ -117,161 +124,138 @@ public class MainActivity extends AppCompatActivity {
             enableNotifications();
         }
 
-        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result ->{
-            if(result.getResultCode() == Activity.RESULT_OK){
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                finish();
-            }
-        });
 
         bundle = new Bundle();
         bundle.putSerializable("userData", userData);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-        homeFragment = new HomeFragment();
-        selectedNavItem = R.id.nav_home;
-        homeFragment.setArguments(bundle);
-
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, homeFragment)
-                .commit();
-
-        getSupportFragmentManager().setFragmentResultListener("goToEdit", this, (requestKey, result) -> {
-            Log.d("Fragment","data");
-            Intent passwordIntent = new Intent(MainActivity.this, EditPasswordActivity.class);
-            passwordIntent.putExtra("username",userData.getName());
-            passwordIntent.putExtra("id",userData.getId());
-            activityResultLauncher.launch(passwordIntent);
+        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result ->{
+            if(result.getResultCode() == 1){
+                removeAllFragments();
+                bottomNavigationView.setSelectedItemId(selectedNavItem);
+            }
         });
-
-        getSupportFragmentManager().setFragmentResultListener("filter", this, (requestKey, result) -> {
-            Log.d("Fragment","Search NAMA");
-            String id = result.getString("user_id");
-            Log.d("ID", id);
-            Bundle filterBundle = new Bundle();
-            filterBundle.putString("id", id);
-            notificationFragment = replaceFragment(notificationFragment, new NotificationFragment(), "NotificationFragment", filterBundle);
-            bottomNavigationView.setSelectedItemId(R.id.nav_notification);
-        });
-
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
 
-            if (itemId == selectedNavItem) {
-                refreshFragment(itemId); // Refresh if already selected
-            } else {
-                if (itemId == R.id.nav_home) {
-                    if (homeFragment == null) {
-                        homeFragment = new HomeFragment();
-                        homeFragment.setArguments(bundle);
-                        addFragment(homeFragment, "HomeFragment");
-                    } else {
-                        showFragment(homeFragment);
-                    }
-                } else if (itemId == R.id.nav_notification) {
-                    if (notificationFragment == null) {
-                        notificationFragment = new NotificationFragment();
-                        notificationFragment.setArguments(bundle);
-                        addFragment(notificationFragment, "NotificationFragment");
-                    } else {
-                        showFragment(notificationFragment);
-                    }
-                } else if(itemId == R.id.nav_students){
-                    if (anakFragment == null) {
-                        anakFragment = new AnakFragment();
-                        anakFragment.setArguments(bundle);
-                        addFragment(anakFragment,"AnakFragment");
-                    } else {
-                        showFragment(anakFragment);
-                    }
+            if(itemId == selectedNavItem){
+                refreshFragment(itemId);
+            }else {
+                if(itemId == R.id.nav_home) {
+                    addFragment(new HomeFragment(), HOME_TAG, bundle);
+                    showOnlyFragment(HOME_TAG);
+                } else if (itemId == R.id.nav_history) {
+                    addFragment(new HistoryFragment(), HISTORY_TAG, bundle);
+                    showOnlyFragment(HISTORY_TAG);
+                } else if (itemId == R.id.nav_students) {
+                    addFragment(new AnakFragment(), STUDENT_TAG, bundle);
+                    showOnlyFragment(STUDENT_TAG);
                 } else if (itemId == R.id.nav_profile) {
-                    if (profileFragment == null) {
-                        profileFragment = new ProfileFragment();
-                        profileFragment.setArguments(bundle);
-                        addFragment(profileFragment,"ProfileFragment");
-                    } else {
-                        showFragment(profileFragment);
-                    }
+                    addFragment(new ProfileFragment(), PROFILE_TAG, bundle);
+                    showOnlyFragment(PROFILE_TAG);
                 }
             }
             selectedNavItem = itemId; // Update last selected item
             return true;
         });
 
+        bottomNavigationView.setSelectedItemId(R.id.nav_home);
+
+        getSupportFragmentManager().setFragmentResultListener("filter", this, (requestKey, result) -> {
+            Log.d("Fragment","Search NAMA");
+            String id = result.getString("user_id");
+            Log.d("ID", id);
+            replaceFragment(new HistoryFragment(), HISTORY_TAG, result);
+            bottomNavigationView.setSelectedItemId(R.id.nav_history);
+        });
+
+        getSupportFragmentManager().setFragmentResultListener("view_berita", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                selectedNavItem = bottomNavigationView.getSelectedItemId();
+                Intent intent = new Intent(MainActivity.this, ViewBeritaActivity.class);
+                intent.putExtra("berita", (Berita) result.getSerializable("berita"));
+                activityResultLauncher.launch(intent);
+            }
+        });
+
     }
 
-    private void showFragment(Fragment fragment) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        hideAllFragments(transaction)
-                .show(fragment)
-                .commit();
-    }
+    private void addFragment(Fragment frag, String tag, Bundle arg){
+        frag.setArguments(arg);
+        FragmentManager manager = getSupportFragmentManager();
+        Fragment existingFragment = manager.findFragmentByTag(tag);
 
-
-    private void addFragment(Fragment fragment,String tag) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        hideAllFragments(transaction)
-                .add(R.id.fragment_container, fragment, tag)
-                .show(fragment)
-                .commit();
-    }
-
-    private Fragment replaceFragment (Fragment remove, Fragment add, String tag, Bundle args){
-        if(getSupportFragmentManager().findFragmentByTag(tag) != null) {
-            removeFragment(remove);
+        // Only add the fragment if it doesn’t already exist
+        if (existingFragment == null) {
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.add(FRAGMENT_ID, frag, tag).commitNow();
         }
-        if(args!=null){
-            add.setArguments(args);
+    }
+
+    private void replaceFragment (Fragment add, String tag, Bundle args){
+        FragmentManager manager = getSupportFragmentManager();
+        Fragment fragmentToRemove = manager.findFragmentByTag(tag);
+        if(fragmentToRemove != null) {
+            removeFragment(fragmentToRemove);
         }
-        addFragment(add, tag);
-        return add;
+        addFragment(add, tag, args);
     }
 
     private void removeFragment(Fragment fragment){
-        getSupportFragmentManager().beginTransaction().remove(fragment);
+        getSupportFragmentManager().beginTransaction().remove(fragment).commitNow();
     }
 
-    private FragmentTransaction hideAllFragments(FragmentTransaction transaction) {
-        if (homeFragment != null) transaction.hide(homeFragment);
-        if (notificationFragment != null) transaction.hide(notificationFragment);
-        if (profileFragment != null) transaction.hide(profileFragment);
-        if (anakFragment != null) transaction.hide(anakFragment);
+    private void showOnlyFragment(String tag){
+        FragmentManager manager = getSupportFragmentManager();
+        Fragment fragment = null;
+        fragment = manager.findFragmentByTag(tag);
+        if (fragment != null) {
+            hideAllFragments().show(fragment).commitNow();
+        } else {
+            Log.e("showOnlyFragment", "Fragment with tag " + tag + " not found.");
+        }
+    }
+
+    private FragmentTransaction hideAllFragments(){
+        FragmentManager manager = getSupportFragmentManager();
+
+        FragmentTransaction transaction = manager.beginTransaction();
+        System.out.println(manager.getFragments());
+        for(Fragment fragment : manager.getFragments()){
+            transaction.hide(fragment);
+        }
         return transaction;
     }
 
-    private void refreshFragment(int itemId) {
-        Fragment fragmentToRefresh = null;
-        String tag = "";
-        FragmentTransaction transaction =  getSupportFragmentManager().beginTransaction();
-        if (itemId == R.id.nav_home) {
-            transaction.remove(homeFragment).commit();
-            fragmentToRefresh = new HomeFragment();
-            homeFragment = fragmentToRefresh;
-            tag = "HomeFragment";
-        } else if (itemId == R.id.nav_notification) {
-            transaction.remove(notificationFragment).commit();
-            fragmentToRefresh = new NotificationFragment();
-            notificationFragment = fragmentToRefresh;
-            tag = "NotificationFragment";
-        } else if (itemId == R.id.nav_students){
-            transaction.remove(anakFragment).commit();
-            fragmentToRefresh = new AnakFragment();
-            anakFragment = fragmentToRefresh;
-            tag = "ProfileFragment";
+    private void refreshFragment(int itemId){
+        if(itemId == R.id.nav_home){
+            replaceFragment(new HomeFragment(),HOME_TAG, bundle);
+        } else if (itemId == R.id.nav_history) {
+            replaceFragment(new HistoryFragment(),HISTORY_TAG, bundle);
+        } else if (itemId == R.id.nav_students) {
+            replaceFragment(new AnakFragment(), STUDENT_TAG, bundle);
         } else if (itemId == R.id.nav_profile) {
-            transaction.remove(profileFragment).commit();
-            fragmentToRefresh = new ProfileFragment();
-            profileFragment = fragmentToRefresh;
-            tag = "ProfileFragment";
+            replaceFragment(new ProfileFragment(), PROFILE_TAG, bundle);
         }
-        fragmentToRefresh.setArguments(bundle);
-        hideAllFragments(getSupportFragmentManager().beginTransaction())
-                .add(R.id.fragment_container, fragmentToRefresh, tag)
-                .show(fragmentToRefresh)
-                .commit();
+    }
+
+    private void removeOtherFragments(String tag){
+        FragmentManager manager = getSupportFragmentManager();
+        Fragment currentFragment = manager.findFragmentByTag(tag);
+        for(Fragment fragment : manager.getFragments()){
+            if(!fragment.equals(currentFragment)){
+                removeFragment(fragment);
+            }
+        }
+    }
+
+    private void removeAllFragments(){
+        FragmentManager manager = getSupportFragmentManager();
+        for(Fragment fragment : manager.getFragments()){
+            removeFragment(fragment);
+        }
     }
 
     @Override
