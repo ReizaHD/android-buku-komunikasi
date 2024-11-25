@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:layout_marginBottom="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Profile Image -->
+        <FrameLayout
+            android:id="@+id/avatar_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="#FEC100">
+            <ImageView
+                android:id="@+id/avatar"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center_vertical"
+
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginVertical="40dp"
+                android:src="@drawable/avatar_default" />
+        </FrameLayout>
+
+        <RelativeLayout
+            android:id="@+id/pemberitahuan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:background="@drawable/card_round_bg">
+            <!-- Text section (Name, Date, Description) -->
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Student Name -->
+                <TextView
+                    android:id="@+id/nama_siswa"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@+id/info_button"
+                    android:paddingEnd="5dp"
+                    android:end="@+id/info_button"
+                    android:fontFamily="@font/inter_bold"
+                    android:text="Nama Siswa"
+                    android:textSize="16sp" />
+
+                <!-- Date -->
+                <TextView
+                    android:id="@+id/tanggal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/nama_siswa"
+                    android:text="Kamis, 16 Mei 2024"
+                    android:fontFamily="@font/inter"
+                    android:textSize="16sp" />
+
+                <!-- Description -->
+                <TextView
+                    android:id="@+id/deskripsi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="76dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_below="@id/tanggal"
+                    android:text="Ayah Bunda, Besok Jumat 17 Mei 2024 diharapkan kakak kakak salih dan salihah membawa buku tulis dan tumbler untuk kegiatan outing class di sekitar sekolah. Ayah Bunda bisa menjemput Kakak Salih dan Salihah pada jam 17.00 setelah kegiatan"
+                    android:fontFamily="@font/inter"
+                    android:textSize="12sp"
+                    android:maxLines="5"
+                    android:ellipsize="end"
+                    />
+                <!-- Information Button -->
+                <Button
+                    android:id="@+id/info_button"
+                    android:enabled="false"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    style="@style/textOnlyButtonStyle"
+                    android:backgroundTint="#FFC107"
+                    android:text="Informasi Personal"
+                    android:textSize="10sp"
+                    android:layout_alignParentEnd="true"/>
+            </RelativeLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

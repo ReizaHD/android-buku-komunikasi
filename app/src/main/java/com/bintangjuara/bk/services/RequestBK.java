@@ -9,9 +9,11 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.bintangjuara.bk.models.Berita;
+import com.bintangjuara.bk.models.Announcement;
+import com.bintangjuara.bk.models.Feedback;
 import com.bintangjuara.bk.models.Subject;
 import com.bintangjuara.bk.models.StaticData;
 import com.bintangjuara.bk.models.Student;
@@ -21,7 +23,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,8 +37,8 @@ public class RequestBK {
     private static Context ctx;
     private RequestQueue requestQueue;
 
-    private static final String BASE_URL = "https://siakad.bintangjuara.sch.id/rest_mobile/";
-    private static final String TEMP_URL = "http://192.168.1.6/buku_komunikasi/school/";
+//    private static final String BASE_URL = "https://siakad.bintangjuara.sch.id/rest_mobile/";
+    private static final String BASE_URL = "https://buku-komunikasi.vercel.app/";
     private static final Map<String, String> HEADER = new HashMap<String, String>(){{
         put("X-API-KEY", "sso-ikitas_1993smb11");
     }};
@@ -68,14 +69,17 @@ public class RequestBK {
         body.put("password", password);
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
-                BASE_URL + "rest_user",
+                BASE_URL + "api/user",
                 response -> {
                     JSONObject json;
                     UserData userData = null;
                     try {
                         json = new JSONObject(response);
-                        String data = json.getString("data");
-                        userData = new UserData(data);
+                        if(json.getBoolean("success")) {
+                            String data = json.getString("data");
+                            userData = new UserData(data);
+                        }
+
                     } catch (JSONException e) {
                         Log.e("JSON Exception", e.toString());
                     }
@@ -106,7 +110,7 @@ public class RequestBK {
         body.put("id", userId);
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
-                BASE_URL + "rest_user/password",
+                BASE_URL + "api/user/edit_password",
                 listener::onResponse,
                 listener::onError
         ){
@@ -123,105 +127,90 @@ public class RequestBK {
                 return header;
             }
         };
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-                800,  // Timeout in milliseconds
-                1,      // Maximum retries
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT  // Backoff multiplier
-        ));
         getRequestQueue().add(stringRequest);
     }
 
-    public void requestBerita(BeritaListener listener){
+    public void requestAnnouncement(int userId,AnnouncementListener listener){
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
-                TEMP_URL + "feedback_rest.php",
+                BASE_URL + "api/announcement",
                 response -> {
-                    ArrayList<Berita> listBerita = new ArrayList<>();
+                    ArrayList<Object> listData = new ArrayList<>();
                     SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
                     try {
                         JSONObject responseJson = new JSONObject(response);
-                        Log.d("Response", responseJson.getString("status"));
-                        JSONArray jsonArray = responseJson.getJSONArray("data");
-                        for(int i=0;i<jsonArray.length();i++){
-                            JSONObject obj = jsonArray.getJSONObject(i);
-                            int feedbackId = obj.getInt("feedback_id");
-                            int studentId = obj.getInt("student_id");
-                            String studentName = obj.getString("student_name");
-                            String studentClass = obj.getString("student_class");
-                            String weekendAssignment = obj.getString("weekend_assignment");
-                            String additionalFeedback = obj.getString("additional_feedback");
-                            String extracurricular = obj.getString("extracurricular");
-                            boolean isRead = obj.getBoolean("is_read");
-                            String strDate = obj.getString("date");
-                            String parentFeedback = "";
-                            if(!obj.isNull("parent_feedback")){
-                                parentFeedback = obj.getString("parent_feedback");
-                            }
-                            JSONObject subjects = obj.getJSONObject("subjects");
+                        Log.d("response", responseJson.toString());
+                        JSONArray dataArray = responseJson.getJSONArray("data");
+                        for(int i=0;i<dataArray.length();i++){
+                            JSONObject data = dataArray.getJSONObject(i);
+                            String type= data.getString("type");
+                            int announcementId = data.getInt("announcement_id");
+                            if(type.equals("feedback")){
+                                int feedbackId = data.getInt("feedback_id");
+                                int studentId = data.getInt("student_id");
+                                String studentName = data.getString("student_name");
+                                String studentClass = data.getString("student_class");
+                                String weekendAssignment = data.getString("weekend_assignment");
+                                String additionalFeedback = data.getString("additional_feedback");
+                                String extracurricular = data.getString("extracurricular");
+                                boolean isRead = data.getBoolean("is_read");
+                                String strDate = data.getString("date");
+                                Log.d("date", strDate);
+                                String parentFeedback = "";
+                                if(!data.isNull("parent_feedback")){
+                                    parentFeedback = data.getString("parent_feedback");
+                                }
+                                JSONObject subjects = data.getJSONObject("subjects");
 
-                            ArrayList<Subject> listSubject = new ArrayList<>();
-                            for (Iterator<String> it = subjects.keys(); it.hasNext(); ) {
-                                String key = it.next();
-                                listSubject.add(new Subject(key, subjects.getString(key)));
+                                ArrayList<Subject> listSubject = new ArrayList<>();
+                                for (Iterator<String> it = subjects.keys(); it.hasNext(); ) {
+                                    String key = it.next();
+                                    listSubject.add(new Subject(key, subjects.getString(key)));
+                                }
+                                Date date = inputFormat.parse(strDate);
+                                listData.add(new Feedback(announcementId,feedbackId, studentId, studentName, studentClass, listSubject, weekendAssignment, additionalFeedback, extracurricular, parentFeedback, isRead, date));
+                            }else if(type.equals("announcement")){
+                                String title = data.getString("announcement_title");
+                                String content = data.getString("content");
+                                JSONArray imageJson ;
+                                String[] images;
+                                if(!data.isNull("image")){
+                                    imageJson = data.getJSONArray("image");
+                                    images = new String[imageJson.length()];
+                                    for (int j = 0; j < imageJson.length(); j++) {
+                                        images[j] = imageJson.getString(j);
+                                    }
+                                }else {
+                                    images = new String[]{};
+                                }
+                                boolean isRead = data.getBoolean("is_read");
+                                String strDate = data.getString("date");
+                                Date date = inputFormat.parse(strDate);
+                                listData.add(new Announcement(announcementId, title, content, images, isRead, date));
                             }
-                            Date date = inputFormat.parse(strDate);
-                            listBerita.add(new Berita(feedbackId, studentId, studentName, studentClass, listSubject, weekendAssignment, additionalFeedback, extracurricular, parentFeedback, isRead, date));
                         }
-                    } catch (JSONException | ParseException e) {
+                    } catch (Exception e) {
                         Log.e("JSON Exception", e.toString());
                     }
-                    listener.onResponse(listBerita);
+                    listener.onResponse(listData);
                 },
-                error -> {
-                    ArrayList<Berita> listBerita = new ArrayList<>();
-                    SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-                    try {
-                        JSONObject responseJson = new JSONObject(StaticData.getFeedback());
-                        Log.d("Response", responseJson.getString("status"));
-                        JSONArray jsonArray = responseJson.getJSONArray("data");
-                        for(int i=0;i<jsonArray.length();i++){
-                            JSONObject obj = jsonArray.getJSONObject(i);
-                            int feedbackId = obj.getInt("feedback_id");
-                            int studentId = obj.getInt("student_id");
-                            String studentName = obj.getString("student_name");
-                            String studentClass = obj.getString("student_class");
-                            String weekendAssignment = obj.getString("weekend_assignment");
-                            String additionalFeedback = obj.getString("additional_feedback");
-                            String extracurricular = obj.getString("extracurricular");
-                            boolean isRead = obj.getBoolean("is_read");
-                            String strDate = obj.getString("date");
-                            String parentFeedback = "";
-                            if(!obj.isNull("parent_feedback")){
-                                parentFeedback = obj.getString("parent_feedback");
-                            }
-                            JSONObject subjects = obj.getJSONObject("subjects");
-
-                            ArrayList<Subject> listSubject = new ArrayList<>();
-                            for (Iterator<String> it = subjects.keys(); it.hasNext(); ) {
-                                String key = it.next();
-                                listSubject.add(new Subject(key, subjects.getString(key)));
-                            }
-                            Date date = inputFormat.parse(strDate);
-                            listBerita.add(new Berita(feedbackId, studentId, studentName, studentClass, listSubject, weekendAssignment, additionalFeedback, extracurricular, parentFeedback, isRead, date));
-                        }
-                    } catch (JSONException | ParseException e) {
-                        Log.e("JSON Exception", e.toString());
-                    }
-                    listener.onError(error, listBerita);
-                }
-        );
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-                800,  // Timeout in milliseconds
-                1,      // Maximum retries
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT  // Backoff multiplier
-        ));
+                listener::onError
+        ){
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> body = new HashMap<>();
+                body.put("user_id", String.valueOf(userId));
+                return body;
+            }
+        };
         getRequestQueue().add(stringRequest);
     }
 
-    public void beritaRead(String id, ResponseListener listener){
+    public void announcementRead(String id, ResponseListener listener){
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
-                TEMP_URL + "feedback_read.php",
+                BASE_URL + "api/announcement/read",
                 listener::onResponse,
                 listener::onError
         ){
@@ -229,7 +218,7 @@ public class RequestBK {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> body = new HashMap<>();
-                body.put("feedback_id",id);
+                body.put("announcement_id",id);
                 return body;
             }
         };
@@ -239,7 +228,7 @@ public class RequestBK {
     public void insertFeedback(String msg, String id, ResponseListener listener){
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
-                TEMP_URL + "parent_feedback_insert.php",
+                BASE_URL + "api/feedback/insert_parent",
                 listener::onResponse,
                 listener::onError
         ){
@@ -258,11 +247,12 @@ public class RequestBK {
     public void requestStudent(int userId, StudentListener listener){
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
-                TEMP_URL + "student_rest.php",
+                BASE_URL + "api/user/students",
                 response -> {
                     ArrayList<Student> students = new ArrayList<>();
                     try {
-                        JSONArray jsonArray = new JSONArray(response);
+                        JSONObject responseJson = new JSONObject(response);
+                        JSONArray jsonArray = responseJson.getJSONArray("data");
                         for(int i=0; i < jsonArray.length(); i++){
                             JSONObject obj = jsonArray.getJSONObject(i);
                             int id = obj.getInt("id");
@@ -300,11 +290,6 @@ public class RequestBK {
                 return body;
             }
         };
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-                800,  // Timeout in milliseconds
-                1,      // Maximum retries
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT  // Backoff multiplier
-        ));
         getRequestQueue().add(stringRequest);
     }
 
@@ -318,9 +303,9 @@ public class RequestBK {
         void onError(Exception error);
     }
 
-    public interface BeritaListener{
-        void onResponse(ArrayList<Berita> listBerita);
-        void onError(Exception error, ArrayList<Berita> listBerita);
+    public interface AnnouncementListener {
+        void onResponse(ArrayList<Object> listData);
+        void onError(Exception error);
     }
 
     public interface StudentListener{

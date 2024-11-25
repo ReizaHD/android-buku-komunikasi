@@ -6,16 +6,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-public class Berita implements Serializable {
-    private int feedbackId;
-    private int studentId;
-    private String studentName, studentClass;
-    private String weekendAssignment, additionalFeedback, extracurricular, parentFeedback;
-    private boolean isRead;
-    private Date date;
-    private ArrayList<Subject> subjects;
+public class Feedback extends Announcement implements Serializable {
+    private final int feedbackId;
+    private final int studentId;
+    private final String studentName, studentClass;
+    private final String weekendAssignment, additionalFeedback, extracurricular;
+    private String parentFeedback;
+    private final ArrayList<Subject> subjects;
 
-    public Berita(int feedbackId, int studentId, String studentName, String studentClass, ArrayList<Subject> subjects, String weekendAssignment, String additionalFeedback, String extracurricular, String parentFeedback, boolean isRead, Date date) {
+    public Feedback(int announcementId, int feedbackId, int studentId, String studentName, String studentClass, ArrayList<Subject> subjects, String weekendAssignment, String additionalFeedback, String extracurricular, String parentFeedback, boolean isRead, Date date) {
+        super();
+        super.setAnnouncementId(announcementId);
+        super.setRead(isRead);
+        super.setDate(date);
         this.feedbackId = feedbackId;
         this.studentId = studentId;
         this.studentName = studentName;
@@ -25,8 +28,6 @@ public class Berita implements Serializable {
         this.additionalFeedback = additionalFeedback;
         this.parentFeedback = parentFeedback;
         this.extracurricular = extracurricular;
-        this.isRead = isRead;
-        this.date = date;
     }
 
     public int getStudentId() {
@@ -37,25 +38,12 @@ public class Berita implements Serializable {
         return additionalFeedback;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
-    public String getStrDate(){
-        SimpleDateFormat outputFormat = new SimpleDateFormat("EEEE, d MMMM yyyy", new Locale("id", "ID"));
-        return outputFormat.format(date);
-    }
-
     public String getExtracurricular() {
         return extracurricular;
     }
 
     public int getFeedbackId() {
         return feedbackId;
-    }
-
-    public boolean isRead() {
-        return isRead;
     }
 
     public String getParentFeedback() {
@@ -76,10 +64,6 @@ public class Berita implements Serializable {
 
     public String getWeekendAssignment() {
         return weekendAssignment;
-    }
-
-    public void setRead(boolean read) {
-        isRead = read;
     }
 
     public void setParentFeedback(String msg){

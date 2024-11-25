@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".activities.ViewFeedbackActivity"
+    android:background="@color/white">
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:liftOnScroll="false">
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="Pemberitahuan"
+            app:subtitle="14 Oktober 2024"
+            app:titleCentered="true"
+            app:subtitleCentered="true"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:layout_scrollFlags="scroll|enterAlways"
+            android:background="#FFC200"
+            />
+    </com.google.android.material.appbar.AppBarLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="?attr/actionBarSize"
+        android:paddingBottom="30dp"
+        >
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_carousel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"
+            />
+
+        <LinearLayout
+            android:id="@+id/judul_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/recycler_carousel"
+            android:layout_marginHorizontal="@dimen/horizontal_margin"
+            android:layout_marginTop="30dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/judul"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="21sp"
+                android:fontFamily="@font/fredoka"
+                android:text="Judul Pemberitahuan"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/gray_line"/>
+            <TextView
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/card_yellow_round"
+                android:padding="10dp"
+                android:fontFamily="@font/inter"
+                android:text="Bahasa Inggris menuntaskan tantangan pada workbook halaman 15 Bahasa Indonesia menuntaskan tantangan untuk menceritakan kembali isi cerita &quot;Naik-Naik Ke Puncak Bukit&quot;\nP5 Menuntaskan tantangan pada lembar kerja di buku P5"/>
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

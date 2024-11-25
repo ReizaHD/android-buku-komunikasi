@@ -1,7 +1,6 @@
 package com.bintangjuara.bk.activities;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,7 +28,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.bintangjuara.bk.R;
 import com.bintangjuara.bk.fragments.AnakFragment;
-import com.bintangjuara.bk.models.Berita;
+import com.bintangjuara.bk.models.Announcement;
+import com.bintangjuara.bk.models.Feedback;
 import com.bintangjuara.bk.models.UserData;
 import com.bintangjuara.bk.fragments.HomeFragment;
 import com.bintangjuara.bk.fragments.HistoryFragment;
@@ -166,16 +166,25 @@ public class MainActivity extends AppCompatActivity {
             Log.d("Fragment","Search NAMA");
             String id = result.getString("user_id");
             Log.d("ID", id);
+            result.putSerializable("userData", userData);
             replaceFragment(new HistoryFragment(), HISTORY_TAG, result);
             bottomNavigationView.setSelectedItemId(R.id.nav_history);
         });
 
-        getSupportFragmentManager().setFragmentResultListener("view_berita", this, new FragmentResultListener() {
+        getSupportFragmentManager().setFragmentResultListener("view_announcement", this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
                 selectedNavItem = bottomNavigationView.getSelectedItemId();
-                Intent intent = new Intent(MainActivity.this, ViewBeritaActivity.class);
-                intent.putExtra("berita", (Berita) result.getSerializable("berita"));
+                Intent intent;
+                Announcement announcement = (Announcement) result.getSerializable("announcement");
+                if(announcement instanceof Feedback) {
+                    Feedback feedback = (Feedback) announcement;
+                    intent = new Intent(MainActivity.this, ViewFeedbackActivity.class);
+                    intent.putExtra("berita", feedback);
+                }else{
+                    intent = new Intent(MainActivity.this, ViewAnnouncementActivity.class);
+                    intent.putExtra("berita", announcement);
+                }
                 activityResultLauncher.launch(intent);
             }
         });

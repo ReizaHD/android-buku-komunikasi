@@ -22,10 +22,11 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.bintangjuara.bk.R;
-import com.bintangjuara.bk.activities.ViewBeritaActivity;
+import com.bintangjuara.bk.models.Feedback;
+import com.bintangjuara.bk.models.UserData;
 import com.bintangjuara.bk.services.RequestBK;
-import com.bintangjuara.bk.adapters.MessageAdapter;
-import com.bintangjuara.bk.models.Berita;
+import com.bintangjuara.bk.adapters.AnnouncementAdapter;
+import com.bintangjuara.bk.models.Announcement;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -44,9 +45,10 @@ public class HistoryFragment extends Fragment {
     EditText searchBar;
     SwipeRefreshLayout refreshLayout;
     String idFilter;
-    ArrayList<Berita> beritaArrayList;
+    ArrayList<Object> announcementArrayList;
     LinearLayout mainLayout;
     ActivityResultLauncher<Intent> resultLauncher;
+    UserData userData;
 
     public HistoryFragment() {
         // Required empty public constructor
@@ -56,6 +58,7 @@ public class HistoryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null){
+            userData = (UserData) getArguments().getSerializable("userData");
             idFilter = getArguments().getString("user_id");
         }
 
@@ -81,8 +84,9 @@ public class HistoryFragment extends Fragment {
         searchBar = view.findViewById(R.id.search_bar);
         refreshLayout = view.findViewById(R.id.refresh);
         mainLayout = view.findViewById(R.id.main);
+        int userId = userData.getId();
 
-        requestBerita();
+        requestBerita(userId);
 
 //        MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
 //        builder.setTitleText("Select date")
@@ -119,7 +123,7 @@ public class HistoryFragment extends Fragment {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                requestBerita();
+                requestBerita(userId);
                 searchBar.setText("");
             }
         });
@@ -150,15 +154,18 @@ public class HistoryFragment extends Fragment {
                 calendar.set(Calendar.SECOND, 0);
                 calendar.set(Calendar.MILLISECOND, 0);
                 Date dateEnd = calendar.getTime();
-                ArrayList<Berita> filteredBerita = new ArrayList<>();
-                for(Berita berita : beritaArrayList){
-                    Date dateBerita = berita.getDate();
-                    if(!dateBerita.before(dateStart) && !dateBerita.after(dateEnd)){
-                        filteredBerita.add(berita);
+                ArrayList<Object> filteredAnnouncement = new ArrayList<>();
+                for(Object obj : announcementArrayList){
+                    if(obj instanceof Announcement) {
+                        Announcement announcement = (Announcement) obj;
+                        Date dateBerita = announcement.getDate();
+                        if (!dateBerita.before(dateStart) && !dateBerita.after(dateEnd)) {
+                            filteredAnnouncement.add(announcement);
+                        }
                     }
                 }
-                MessageAdapter adapter;
-                adapter = new MessageAdapter(getContext(), filteredBerita);
+                AnnouncementAdapter adapter;
+                adapter = new AnnouncementAdapter(getContext(), filteredAnnouncement);
                 list.setLayoutManager(new LinearLayoutManager(getContext()));
                 list.setAdapter(adapter);
                 String formattedDate = sdf.format(dateStart) + " - "+ sdf.format(dateEnd);
@@ -196,34 +203,48 @@ public class HistoryFragment extends Fragment {
 
     }
 
-
-
-    private void requestBerita(){
-        MessageAdapter.OnClickListener onClickListener = new MessageAdapter.OnClickListener() {
-            @Override
-            public void onClick(Berita berita) {
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("berita",berita);
-                getParentFragmentManager().setFragmentResult("view_berita", bundle);
-            }
-        };
+    private void requestBerita(int userId){
         RequestBK requestBK = RequestBK.getInstance(getContext());
-        requestBK.requestBerita(new RequestBK.BeritaListener() {
+        requestBK.requestAnnouncement(userId, new RequestBK.AnnouncementListener() {
             @Override
-            public void onResponse(ArrayList<Berita> listBerita) {
+            public void onResponse(ArrayList<Object> listData) {
+                AnnouncementAdapter.OnClickListener onClickListener = new AnnouncementAdapter.OnClickListener() {
+
+                    @Override
+                    public void onClick(Announcement announcement) {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("announcement",announcement);
+                        getParentFragmentManager().setFragmentResult("view_announcement", bundle);
+                        Log.d("RESULT", "Refreshed");
+                    }
+
+                    @Override
+                    public void onClick(Feedback feedback) {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("announcement",feedback);
+                        getParentFragmentManager().setFragmentResult("view_announcement", bundle);
+                        Log.d("RESULT", "Refreshed");
+                    }
+                };
                 if(idFilter!=null){
-                    ArrayList<Berita> filteredBerita = new ArrayList<>();
-                    for(Berita berita:listBerita){
-                        Log.d("DATE", berita.getDate().toString());
-                        if(berita.getStudentId()==Integer.parseInt(idFilter)){
-                            filteredBerita.add(berita);
+                    ArrayList<Object> filteredAnnouncement = new ArrayList<>();
+                    for(Object obj: listData){
+                        if(obj instanceof Announcement) {
+                            Announcement announcement = (Announcement) obj;
+                            if(announcement instanceof Feedback) {
+                                Feedback feedback = (Feedback) announcement;
+                                if (feedback.getStudentId() == Integer.parseInt(idFilter))
+                                    filteredAnnouncement.add(announcement);
+                            }else {
+                                filteredAnnouncement.add(announcement);
+                            }
                         }
                     }
-                    listBerita = filteredBerita;
+                    listData = filteredAnnouncement;
                 }
-                beritaArrayList = listBerita;
-                MessageAdapter adapter;
-                adapter = new MessageAdapter(getContext(), listBerita);
+                announcementArrayList = listData;
+                AnnouncementAdapter adapter;
+                adapter = new AnnouncementAdapter(getContext(), listData);
                 adapter.setOnClickListener(onClickListener);
                 list.setLayoutManager(new LinearLayoutManager(getContext()));
                 list.setAdapter(adapter);
@@ -234,30 +255,72 @@ public class HistoryFragment extends Fragment {
             }
 
             @Override
-            public void onError(Exception error, ArrayList<Berita> listBerita) {
-                if(idFilter!=null){
-                    ArrayList<Berita> filteredBerita = new ArrayList<>();
-                    for(Berita berita:listBerita){
-                        Log.d("DATE", berita.getDate().toString());
-                        if(berita.getStudentId()==Integer.parseInt(idFilter)){
-                            filteredBerita.add(berita);
-                        }
-                    }
-                    listBerita = filteredBerita;
-                }
-                beritaArrayList = listBerita;
-                MessageAdapter adapter;
-                adapter = new MessageAdapter(getContext(), listBerita);
-                adapter.setOnClickListener(onClickListener);
-                list.setLayoutManager(new LinearLayoutManager(getContext()));
-                list.setAdapter(adapter);
+            public void onError(Exception error) {
 
-                pb.setVisibility(View.GONE);
-                refreshLayout.setRefreshing(false);
-                mainLayout.setVisibility(View.VISIBLE);
             }
         });
     }
+//
+//    private void requestBerita(){
+//        AnnouncementAdapter.OnClickListener onClickListener = new AnnouncementAdapter.OnClickListener() {
+//            @Override
+//            public void onClick(Announcement berita) {
+//                Bundle bundle = new Bundle();
+//                bundle.putSerializable("berita",berita);
+//                getParentFragmentManager().setFragmentResult("view_berita", bundle);
+//            }
+//        };
+//        RequestBK requestBK = RequestBK.getInstance(getContext());
+//        requestBK.requestAnnouncement(new RequestBK.AnnouncementListener() {
+//            @Override
+//            public void onResponse(ArrayList<Announcement> listAnnouncement) {
+//                if(idFilter!=null){
+//                    ArrayList<Announcement> filteredAnnouncement = new ArrayList<>();
+//                    for(Announcement announcement : listAnnouncement){
+//                        Log.d("DATE", announcement.getDate().toString());
+//                        if(announcement.getStudentId()==Integer.parseInt(idFilter)){
+//                            filteredAnnouncement.add(announcement);
+//                        }
+//                    }
+//                    listAnnouncement = filteredAnnouncement;
+//                }
+//                announcementArrayList = listAnnouncement;
+//                AnnouncementAdapter adapter;
+//                adapter = new AnnouncementAdapter(getContext(), listAnnouncement);
+//                adapter.setOnClickListener(onClickListener);
+//                list.setLayoutManager(new LinearLayoutManager(getContext()));
+//                list.setAdapter(adapter);
+//
+//                pb.setVisibility(View.GONE);
+//                refreshLayout.setRefreshing(false);
+//                mainLayout.setVisibility(View.VISIBLE);
+//            }
+//
+//            @Override
+//            public void onError(Exception error, ArrayList<Announcement> listAnnouncement) {
+//                if(idFilter!=null){
+//                    ArrayList<Announcement> filteredAnnouncement = new ArrayList<>();
+//                    for(Announcement announcement : listAnnouncement){
+//                        Log.d("DATE", announcement.getDate().toString());
+//                        if(announcement.getStudentId()==Integer.parseInt(idFilter)){
+//                            filteredAnnouncement.add(announcement);
+//                        }
+//                    }
+//                    listAnnouncement = filteredAnnouncement;
+//                }
+//                announcementArrayList = listAnnouncement;
+//                AnnouncementAdapter adapter;
+//                adapter = new AnnouncementAdapter(getContext(), listAnnouncement);
+//                adapter.setOnClickListener(onClickListener);
+//                list.setLayoutManager(new LinearLayoutManager(getContext()));
+//                list.setAdapter(adapter);
+//
+//                pb.setVisibility(View.GONE);
+//                refreshLayout.setRefreshing(false);
+//                mainLayout.setVisibility(View.VISIBLE);
+//            }
+//        });
+//    }
 
     private void refresh(){
 

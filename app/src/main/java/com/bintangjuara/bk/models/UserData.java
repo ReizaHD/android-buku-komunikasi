@@ -17,7 +17,7 @@ public class UserData implements Serializable {
             this.image = dataJson.getString("user_image");
             this.name = dataJson.getString("user_name");
             this.profile = dataJson.getString("profile");
-            this.roleId = Integer.parseInt(dataJson.getString("user_role_id"));;
+            this.roleId = 1;
         } catch (JSONException e) {
             e.printStackTrace();
         }

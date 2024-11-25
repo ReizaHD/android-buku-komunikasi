@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".activities.ViewBeritaActivity"
+    tools:context=".activities.ViewFeedbackActivity"
     android:background="@color/white">
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -74,20 +74,11 @@
             </LinearLayout>
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_carousel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
-            app:layout_constraintTop_toBottomOf="@+id/id_layout"
-            />
-
         <LinearLayout
             android:id="@+id/pembelajaran"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/recycler_carousel"
+            app:layout_constraintTop_toBottomOf="@+id/id_layout"
             android:layout_marginHorizontal="@dimen/horizontal_margin"
             android:layout_marginTop="30dp"
             android:orientation="vertical">
