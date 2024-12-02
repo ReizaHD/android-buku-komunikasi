@@ -28,6 +28,8 @@ import com.bintangjuara.bk.models.Announcement;
 import com.bintangjuara.bk.models.CarouselItem;
 import com.bintangjuara.bk.services.RequestBK;
 import com.bintangjuara.bk.utilities.CarouselItemDecoration;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.MaterialToolbar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,6 +41,7 @@ public class ViewAnnouncementActivity extends AppCompatActivity {
     private TextView mJudul, mContent;
     private RecyclerView mImageRecyclerView;
     private int activityResult = 0;
+    private MaterialToolbar topBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +65,11 @@ public class ViewAnnouncementActivity extends AppCompatActivity {
         mJudul = findViewById(R.id.judul);
         mContent = findViewById(R.id.content);
         mImageRecyclerView = findViewById(R.id.recycler_carousel);
+        topBar = findViewById(R.id.top_bar);
 
         mJudul.setText(announcement.getTitle());
         mContent.setText(announcement.getContent());
+        topBar.setSubtitle(announcement.getStrDate());
 
         ArrayList<CarouselItem> carouselItems = new ArrayList<>();
         if(announcement.getImageUrl().length>0) {

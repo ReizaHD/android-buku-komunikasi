@@ -15,7 +15,7 @@
             android:id="@+id/top_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:title="Catatan"
+            app:title="Pemberitahuan"
             app:subtitle="periode 7-14 Oktober"
             app:titleCentered="true"
             app:subtitleCentered="true"

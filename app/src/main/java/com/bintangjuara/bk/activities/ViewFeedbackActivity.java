@@ -78,6 +78,7 @@ public class ViewFeedbackActivity extends AppCompatActivity {
         tugasWeekend.setText(announcement.getWeekendAssignment());
         catatan.setText(announcement.getAdditionalFeedback());
         ekstrakurikuler.setText(announcement.getExtracurricular());
+        topBar.setSubtitle(announcement.getStrDate());
 
         feedbackView = findViewById(R.id.feedback);
         feedbackBtn = findViewById(R.id.feedback_button);

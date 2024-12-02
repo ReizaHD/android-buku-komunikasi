@@ -67,6 +67,7 @@ public class AnnouncementAdapter extends RecyclerView.Adapter<AnnouncementAdapte
             holder.namaSiswa.setText(feedback.getStudentName());
             holder.pesanTxt.setText(feedback.getAdditionalFeedback());
             holder.tgl.setText(feedback.getStrDate());
+            holder.infoBtn.setText("Informasi Personal");
         } else {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -74,6 +75,7 @@ public class AnnouncementAdapter extends RecyclerView.Adapter<AnnouncementAdapte
                     onClickListener.onClick(announcement);
                 }
             });
+            holder.infoBtn.setText("Informasi Umum");
             holder.namaSiswa.setText(announcement.getTitle());
             holder.pesanTxt.setText(announcement.getContent());
             holder.tgl.setText(announcement.getStrDate());

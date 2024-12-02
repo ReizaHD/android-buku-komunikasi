@@ -73,17 +73,22 @@ public class RequestBK {
                 response -> {
                     JSONObject json;
                     UserData userData = null;
+                    boolean isSuccess = false;
                     try {
                         json = new JSONObject(response);
-                        if(json.getBoolean("success")) {
+                        isSuccess = json.getBoolean("success");
+                        if(isSuccess) {
                             String data = json.getString("data");
                             userData = new UserData(data);
+                        }else {
+                            listener.onError(new Exception("Failed retrieve the data"));
                         }
 
                     } catch (JSONException e) {
                         Log.e("JSON Exception", e.toString());
                     }
-                    listener.onResponse(userData);
+                    if(isSuccess)
+                        listener.onResponse(userData);
                 },
                 listener::onError
         ){
@@ -118,13 +123,6 @@ public class RequestBK {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 return body;
-            }
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String,String> header = new HashMap<>();
-                header.put("X-API-KEY", "sso-ikitas_1993smb11");
-                return header;
             }
         };
         getRequestQueue().add(stringRequest);

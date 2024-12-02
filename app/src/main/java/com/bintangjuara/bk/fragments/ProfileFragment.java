@@ -53,6 +53,7 @@ public class ProfileFragment extends Fragment {
     AlertDialog.Builder builder;
     boolean isPassVisible = false;
     EditText focusedEditText;
+    Button positiveBtn;
 
 
     public ProfileFragment() {
@@ -177,8 +178,8 @@ public class ProfileFragment extends Fragment {
 
     private void editPassword(Map<String, String> body) {
         // Initializing the AlertDialog builder
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Edit Password");
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.darkDialogStyle);
+        builder.setTitle("Ubah Kata Sandi");
 
         // Set up a layout with a ProgressBar and TextView
         LinearLayout layout = new LinearLayout(getContext());
@@ -189,17 +190,23 @@ public class ProfileFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE); // Initially visible
 
         TextView messageTextView = new TextView(getContext());
-        messageTextView.setText("Please wait...");
+        messageTextView.setText("Mohon tunggu...");
         layout.addView(progressBar);
         layout.addView(messageTextView);
 
         builder.setView(layout);
+        builder.setPositiveButton("OK", null);
 
         // Creating and displaying the dialog
         AlertDialog alertDialog = builder.create();
         alertDialog.setCancelable(false);
         alertDialog.setCanceledOnTouchOutside(false);
         alertDialog.show();
+
+        positiveBtn = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        if (positiveBtn != null) {
+            positiveBtn.setVisibility(View.GONE); // Hide the button
+        }
 
         RequestBK requestBK = RequestBK.getInstance(getContext());
         requestBK.userEditPassword(
@@ -217,22 +224,30 @@ public class ProfileFragment extends Fragment {
                         editor.clear();
                         editor.apply();
                         progressBar.setVisibility(View.GONE);
-                        messageTextView.setText("Password updated successfully.");
-                        builder.setPositiveButton("OK", (dialog, which) -> {
-                            dialog.dismiss();
-                            startActivity(new Intent(getContext(), LoginActivity.class));
-                            getActivity().finish();
+                        messageTextView.setText("Kata Sandi berhasil diubah.");
+                        positiveBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                alertDialog.dismiss();
+                                startActivity(new Intent(getContext(), LoginActivity.class));
+                                getActivity().finish();
+                            }
                         });
+                        positiveBtn.setVisibility(View.VISIBLE);
                     }
 
                     @Override
                     public void onError(Exception error) {
                         Log.e("Change Password", error.toString());
                         progressBar.setVisibility(View.GONE);
-                        messageTextView.setText("Failed to update password. Please try again.");
-                        builder.setPositiveButton("OK", (dialog, which) -> {
-                            dialog.dismiss();
+                        messageTextView.setText("Kata sandi gagal diubah. Mohon coba lagi.");
+                        positiveBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                alertDialog.dismiss();
+                            }
                         });
+                        positiveBtn.setVisibility(View.VISIBLE);
                     }
                 }
         );
